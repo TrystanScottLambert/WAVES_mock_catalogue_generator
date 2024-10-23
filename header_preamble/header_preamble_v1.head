@@ -1,0 +1,16 @@
+# Galaxies from Shark (Lagos et al. 2018) in the optical-deep lightcone
+# SED modelling as described in Lagos et al. (2019).
+#
+#
+# If using this lightcone for your science please include the following information (or similar) in your paper:
+#
+# The Shark semi-analytic model of galaxy formation (Lagos et al. 2018) generates self-consistent predictions from the far-ultraviolet to the far-infrared. Shark includes a wide range of baryon physics that are thought to play an important role in the formation and evolution of galaxies, including: (i) the collapse and merging of dark matter (DM) halos; (ii) the accretion of gas onto halos, which is modulated by the DM accretion rate; (iii) the shock heating and radiative cooling of gas inside DM halos, leading to the formation of galactic discs via conservation of specific angular momentum of the cooling gas; (iii) star formation in galaxy discs; (iv) stellar feedback from the evolving stellar populations; (v) chemical enrichment of stars and gas; (vi) the growth via gas accretion and merging of supermassive black holes; (vii) heating by active galactic nuclei (AGN); (viii) photoionization of the intergalactic medium; (ix) galaxy mergers driven by dynamical friction within common DM halos which can trigger bursts of SF and the formation and/or growth of spheroids; (x) collapse of globally unstable disks that also lead to SF bursts and the formation or growth of bulges. For this paper, we use a lightcone generated from the default model presented in Lagos et al. (2018) using the method described in Chauhan et al. (2019).
+# Lagos et al. (2019) and Lagos et al. (2020) presented the FUV-to-FIR multi-wavelength predictions of Shark, by combining the model with the generative SED model ProSpect (Robotham et al. 2020), and using a novel method to compute dust attenuation parameters based on the radiative transfer analysis of the EAGLE hydrodynamical simulations of Trayford et al. (2020). The model was shown to produce excellent agreement with the observed number counts from the FUV to the FIR (Lagos et al. 2019), and the redshift distribution of FIR-selected sources (Lagos et al. 2020). Here, we use a lightcone of area 107.889deg^2 which includes all galaxies at 0<=z<=6 with an 850microns flux > 0.01mJy.
+#
+# Papers to reference:
+# Lagos et al. (2020) https://ui.adsabs.harvard.edu/abs/2020MNRAS.499.1948L/abstract
+# Lagos et al. (2019) https://ui.adsabs.harvard.edu/abs/2019MNRAS.489.4196L/abstract
+# Lagos et al. (2018) https://ui.adsabs.harvard.edu/abs/2018MNRAS.481.3573L/abstract
+# Trayford et al. (2020) https://ui.adsabs.harvard.edu/abs/2020MNRAS.491.3937T/abstract
+# Robotham et al. (2020) https://ui.adsabs.harvard.edu/abs/2020MNRAS.495..905R/abstract
+# Chauhan et al. (2019) https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5898C/abstract
