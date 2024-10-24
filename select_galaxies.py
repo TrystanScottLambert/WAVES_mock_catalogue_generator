@@ -10,6 +10,24 @@ from write import CatalogueDetails, stamp_preamble
 
 
 cosmo = FlatLambdaCDM(Om0=0.3, H0=67.51) # Change this to freeze in our cosmology.
+cat_details = CatalogueDetails(area = 107.889, mag_filter='', mag_cut=23, redshift_cut=3, version='b0.0.1')
+
+
+galaxy_fields = {'galaxies': ('dec', 'ra', 'zobs',
+                           'id_galaxy_sky','sfr_burst','sfr_disk','mstars_bulge','mstars_disk','rstar_bulge_apparent',
+                           'rstar_disk_apparent','id_group_sky','dc', 'mvir_hosthalo', 'type')}
+
+sed_fields = {'SED/ap_dust': ('total', 'bulge_t')}
+lightcone_dir = '/scratch/pawsey0119/clagos/Stingray/output/medi-SURFS/Shark-TreeFixed-ReincPSO-kappa0p002/deep-optical-final/'
+subdir = 'split/'
+sed_file = "Sting-SED-VST-eagle-rr14"
+sub_volumes = np.arange(2)
+
+galaxy_data = read_lightcone(lightcone_dir, subdir, galaxy_fields, sub_volumes, 'mock')
+sed_ids, sed_data = read_photometry_data_hdf5(lightcone_dir, subdir, sed_fields, sub_volumes, sed_file)
+
+
+
 
 
 def prepare_data(phot_data, ids_sed, hdf5_data, hdf5_data_mvir, subvols, lightcone_dir,  nbands):
