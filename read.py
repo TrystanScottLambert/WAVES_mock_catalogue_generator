@@ -23,13 +23,13 @@ def read_lightcone(
             for group_name, data_names in fields.items():
                 group = f[group_name]
                 for data_name in data_names:
-                    full_data_path = f"{group_name}/{data_name}"
-                    data[full_data_path].append(group[data_name][()])
+                    data[data_name].append(group[data_name][()])
 
     for key in data:
         data[key] = np.concatenate(data[key], axis=0)
 
-    return list(data.values())
+    return data
+
 
 def read_filter_names(model_dir: str, sub_dir: str, sed_file: str) -> list[str]:
     """
@@ -43,6 +43,7 @@ def read_filter_names(model_dir: str, sub_dir: str, sed_file: str) -> list[str]:
         ]  # removing byte encoding
     return filter_names
 
+
 def combine_filters_and_data(filter_names: list[str], filter_data: dict) -> dict:
     """
     Takes the data dictionary from the 'read_photometry_data_hdf5' function and combines it with
@@ -53,12 +54,13 @@ def combine_filters_and_data(filter_names: list[str], filter_data: dict) -> dict
     new_data = {}
 
     for old_key, arrays in filter_data.items():
-        components = old_key.split('/')
+        components = old_key.split("/")
 
         for i, filter_name in enumerate(filter_names):
-            new_key = f'{components[2]}_{components[1]}_{filter_name}'
+            new_key = f"{components[2]}_{components[1]}_{filter_name}"
             new_data[new_key] = arrays[i]
     return new_data
+
 
 def read_photometry_data_hdf5(
     model_dir: str, sub_dir: str, fields: dict, sub_volumes: np.ndarray, sed_file: str
@@ -88,20 +90,3 @@ def read_photometry_data_hdf5(
     filters = read_filter_names(model_dir, sub_dir, sed_file)
     data = combine_filters_and_data(filters, data)
     return ids, data
-
-
-
-if __name__ == '__main__':
-    lightcone_dir = '/scratch/pawsey0119/clagos/Stingray/output/medi-SURFS/Shark-TreeFixed-ReincPSO-kappa0p002/deep-optical-final/'
-    subvols = np.arange(10)
-    subdir = 'split/'
-    fields = {'galaxies': ('dec', 'ra', 'zobs',
-                           'id_galaxy_sky','sfr_burst','sfr_disk','mstars_bulge','mstars_disk','rstar_bulge_apparent',
-                           'rstar_disk_apparent','id_group_sky','dc', 'mvir_hosthalo', 'type')}
-    
-    sed_fields =  {'SED/ap_dust': ('total', 'bulge_t'), 'SED/ab_dust': ('total', 'bulge_t')}
-    sed_file = "Sting-SED-VST-eagle-rr14"
-
-    data = read_lightcone(lightcone_dir, subdir, fields, subvols, 'mock')
-    sed_data = read_photometry_data_hdf5(lightcone_dir, subdir, sed_fields, np.arange(3), sed_file)
-    filters = read_filter_names(lightcone_dir, subdir, sed_file)
