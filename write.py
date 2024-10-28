@@ -67,8 +67,8 @@ def write_catagloue(
         file.write(unit_header)
 
         # Writing column names
-        file.write(delimeter.join(final_dict.keys()))
+        file.write(f'{delimeter.join(final_dict.keys())} \n')
 
         # Writing column data
         for row in zip(*final_dict.values()):
-            file.write(delimeter.join(map(str, row)) + "\n")
+            file.write(f'{delimeter.join(map(str, row))} \n')

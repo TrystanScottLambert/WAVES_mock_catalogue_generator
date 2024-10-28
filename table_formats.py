@@ -19,11 +19,11 @@ class DataDescription:
     data: np.ndarray
 
 
-class GalaxyTable:
+class CalculatedTable:
     """
-    Manages the galaxy data that we read in from the mock hdf5 files.
+    Base class for tables that take in inputs and return caclulated properties.
+    Used specifically for the groups and galaxies.
     """
-
     def __init__(
         self, scrapped_dict: dict, description_dict: dict, cosmology: FlatLambdaCDM
     ) -> None:
@@ -31,9 +31,45 @@ class GalaxyTable:
         Scrapped dict is the scrapped data from the various different Hdf5 files. Keys represent
         the properties and the data arrays are the values.
         """
-        for key, value in scrapped_dict.items():
-            setattr(self, key, DataDescription(key, description_dict[key], value))
-        self.cosmo = cosmology
+    def list_columns(self) -> list[str]:
+        """
+        Lists all available columns, including attributes and calculated properties.
+        """
+        return [
+            name
+            for name in dir(self)
+            if isinstance(getattr(self, name), DataDescription)
+        ]
+
+    def get_column(self, column_name: str) -> np.ndarray:
+        """
+        Retrieves the data for the given column name.
+        """
+        return getattr(self, column_name)
+
+    def sample(self, list_of_columns: list[str] = None) -> tuple[str, dict]:
+        """
+        Takes a subsample of column names that want to be written and returns the header to be
+        written to the file as well as a dictionary that can be combined with sed data or other
+        galaxy data read in from elsewhere.
+
+        If list_of_columns is None then the entire data set is generated (default)
+        """
+        if list_of_columns is None:
+            list_of_columns = self.list_columns()
+
+        columns = [self.get_column(col_name) for col_name in list_of_columns]
+        writeable_dict = {}
+        header = ""
+        for column in columns:
+            header += f"# {column.column_name}: {column.description} \n"
+            writeable_dict[column.column_name] = column.data
+        return header, writeable_dict
+
+class GalaxyTable(CalculatedTable):
+    """
+    Manages the galaxy data that we read in from the mock hdf5 files.
+    """
 
     @property
     def log_mstar_total(self) -> DataDescription:
@@ -88,37 +124,10 @@ class GalaxyTable:
         )
         return DataDescription(column_name, description, value)
 
-    def list_columns(self) -> list[str]:
-        """
-        Lists all available columns, including attributes and calculated properties.
-        """
-        return [
-            name
-            for name in dir(self)
-            if isinstance(getattr(self, name), DataDescription)
-        ]
 
-    def get_column(self, column_name: str) -> np.ndarray:
-        """
-        Retrieves the data for the given column name.
-        """
-        return getattr(self, column_name)
+class GroupTable(CalculatedTable):
+    """
+    Managing the data that was read from the hdf5 files.
+    """
 
-    def sample(self, list_of_columns: list[str] = None) -> tuple[str, dict]:
-        """
-        Takes a subsample of column names that want to be written and returns the header to be
-        written to the file as well as a dictionary that can be combined with sed data or other
-        galaxy data read in from elsewhere.
-
-        If list_of_columns is None then the entire data set is generated (default)
-        """
-        if list_of_columns is None:
-            list_of_columns = self.list_columns()
-
-        columns = [self.get_column(col_name) for col_name in list_of_columns]
-        writeable_dict = {}
-        header = ""
-        for column in columns:
-            header += f"# {column.column_name}: {column.description} \n"
-            writeable_dict[column.column_name] = column.data
-        return header, writeable_dict
+    #This is where the i'd put my calculated group property... If I had one!!
