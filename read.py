@@ -38,9 +38,7 @@ def read_filter_names(model_dir: str, sub_dir: str, sed_file: str) -> list[str]:
     full_name = os.path.join(model_dir, sub_dir, f"{sed_file}_00.hdf5")
     with h5py.File(full_name, "r") as f:
         filter_names = f["filters"][:]
-        filter_names = [
-            filter_name.decode() for filter_name in filter_names
-        ]  # removing byte encoding
+        filter_names = [filter_name.decode() for filter_name in filter_names]
     return filter_names
 
 
