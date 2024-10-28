@@ -16,6 +16,7 @@ python3 -m unittest discover -s tests -p "test_write.py" # specific
 # Properties 
 ## Galaxy Properties 
 | Property | Description | 
+| --- | --- | 
 | `coline_flux_int_1` | Integrated CO(1-0) line flux [W/m^2] | 
 | `coline_flux_int_10` | Integrated CO(10-9) line flux [W/m^2] | 
 | `coline_flux_int_2` | Integrated CO(2-1) line flux [W/m^2] | 
@@ -115,6 +116,7 @@ python3 -m unittest discover -s tests -p "test_write.py" # specific
 | `hiline_flux_int_vel` | [Jy km/s] velocity-integrated HI line flux | 
 ## Group Properties 
 | Property | Description | 
+| --- | --- | 
 | `snapshot` | snapshot index | 
 | `subvolume` | subvolume index | 
 | `tile` | tile index in tiling array | 

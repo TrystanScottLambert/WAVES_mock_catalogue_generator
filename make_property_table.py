@@ -11,6 +11,7 @@ def write_property_table(file: TextIO, property_dict: dict) -> None:
     Adds a .md table of the given property dictionary to the given file object.
     """
     file.write('| Property | Description | \n')
+    file.write('| --- | --- | \n')
     for key, value in property_dict.items():
         file.write(f'| `{key}` | {value} | \n')
 
