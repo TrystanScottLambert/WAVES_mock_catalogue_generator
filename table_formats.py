@@ -8,6 +8,24 @@ import numpy as np
 from astropy.cosmology import FlatLambdaCDM
 
 
+def create_unique_group_id(
+    ids_halo_sam: np.ndarray[float],
+    snap_shots: np.ndarray[float],
+    sub_volumes: np.ndarray[int],
+    tiles: np.ndarray[int],
+) -> np.ndarray[str]:
+    """
+    Creates a unique group id that can be used later. This will be replaced by the next run of stringray
+    """
+    unique_ids = [
+        f"{sam_id}_{snap_shot}_{sub_volume}_{tile}"
+        for sam_id, snap_shot, sub_volume, tile in zip(
+            ids_halo_sam, snap_shots, sub_volumes, tiles
+        )
+    ]
+    return np.array(unique_ids)
+
+
 @dataclass
 class DataDescription:
     """
@@ -24,6 +42,7 @@ class CalculatedTable:
     Base class for tables that take in inputs and return caclulated properties.
     Used specifically for the groups and galaxies.
     """
+
     def __init__(
         self, scrapped_dict: dict, description_dict: dict, cosmology: FlatLambdaCDM
     ) -> None:
@@ -31,6 +50,10 @@ class CalculatedTable:
         Scrapped dict is the scrapped data from the various different Hdf5 files. Keys represent
         the properties and the data arrays are the values.
         """
+        for key, value in scrapped_dict.items():
+            setattr(self, key, DataDescription(key, description_dict[key], value))
+        self.cosmo = cosmology
+
     def list_columns(self) -> list[str]:
         """
         Lists all available columns, including attributes and calculated properties.
@@ -65,6 +88,7 @@ class CalculatedTable:
             header += f"# {column.column_name}: {column.description} \n"
             writeable_dict[column.column_name] = column.data
         return header, writeable_dict
+
 
 class GalaxyTable(CalculatedTable):
     """
@@ -124,10 +148,38 @@ class GalaxyTable(CalculatedTable):
         )
         return DataDescription(column_name, description, value)
 
+    @property
+    def unique_group_id(self) -> DataDescription:
+        """
+        Hacked togther unique group_id. This will have to be depreciated once the
+        group_id is fixed in future stingray versions.
+        """
+        column_name = "unique_group_id"
+        description = (
+            "Hacked tother tempary solution. This will be depreciated. Unique group id."
+        )
+        value = create_unique_group_id(
+            self.id_halo_sam.data, self.snapshot.data, self.subvolume.data, self.tile.data
+        )
+        return DataDescription(column_name, description, value)
+
 
 class GroupTable(CalculatedTable):
     """
     Managing the data that was read from the hdf5 files.
     """
 
-    #This is where the i'd put my calculated group property... If I had one!!
+    @property
+    def unique_group_id(self) -> DataDescription:
+        """
+        Hacked togther unique group_id. This will have to be depreciated once the
+        group_id is fixed in future stingray versions.
+        """
+        column_name = "unique_group_id"
+        description = (
+            "Hacked tother tempary solution. This will be depreciated. Unique group id."
+        )
+        value = create_unique_group_id(
+            self.id_halo_sam.data, self.snapshot.data, self.subvolume.data, self.tile.data
+        )
+        return DataDescription(column_name, description, value)

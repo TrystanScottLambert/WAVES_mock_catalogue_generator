@@ -7,8 +7,8 @@ from astropy.cosmology import FlatLambdaCDM
 
 from read import read_lightcone, read_photometry_data_hdf5
 from write import CatalogueDetails, write_catagloue
-from property_dictionaries import GALAXY_PROPERTIES
-from table_formats import GalaxyTable
+from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
+from table_formats import GalaxyTable, GroupTable
 
 
 # Inputs
@@ -21,6 +21,19 @@ cat_details = CatalogueDetails(
     version="b0.0.1",
 )
 
+GROUP_FIELDS = {
+    "groups": (
+        "id_group_sky",
+        "ra",
+        "dec",
+        "zobs",
+        'subvolume',
+        'tile', 
+        'id_halo_sam',
+        'flag',
+        'snapshot',
+    )
+}
 
 GALAXY_FIELDS = {
     "galaxies": (
@@ -38,8 +51,20 @@ GALAXY_FIELDS = {
         "dc",
         "mvir_hosthalo",
         "type",
+        'tile',
+        'subvolume',
+        'id_halo_sam',
+        'snapshot',
     )
 }
+
+GALAXY_PROPS_TO_WRITE = [
+    "unique_group_id",
+    "ra",
+    "dec",
+    "zobs",
+    'flag',
+]
 
 PROPS_TO_WRITE = [
         "id_galaxy_sky",
@@ -50,6 +75,7 @@ PROPS_TO_WRITE = [
         "log_sfr_total",
         "bt",
         "re",
+        'unique_group_id',
     ]
 
 SED_FIELDS = {"SED/ap_dust": ["total"], "SED/ab_dust": ["total"]}
@@ -64,6 +90,7 @@ def main():
     """
     # Reading the data from the hdf5 files
     galaxy_data = read_lightcone(LIGHTCONE_DIR, SUB_DIR, GALAXY_FIELDS, SUB_VOLUMES, "mock")
+    group_data = read_lightcone(LIGHTCONE_DIR, SUB_DIR, GROUP_FIELDS, SUB_VOLUMES, "mock")
     _, sed_data = read_photometry_data_hdf5(
         LIGHTCONE_DIR, SUB_DIR, SED_FIELDS, SUB_VOLUMES, SED_FILE)
 
@@ -75,10 +102,34 @@ def main():
 
     # Working out calculated properties
     galaxy_data = GalaxyTable(galaxy_data, GALAXY_PROPERTIES, cosmo)
+    group_data = GroupTable(group_data, GROUP_PROPERTIES, cosmo)
+
     # Writing
-    header, galaxy_data_to_write = galaxy_data.sample(list_of_columns=PROPS_TO_WRITE)
-    write_catagloue([galaxy_data_to_write, sed_data], header, cat_details, "delete.txt")
+    galaxy_header, galaxy_data_to_write = galaxy_data.sample(list_of_columns=PROPS_TO_WRITE)
+    group_header, group_data_to_write = group_data.sample(list_of_columns=GALAXY_PROPS_TO_WRITE)
+    write_catagloue([galaxy_data_to_write, sed_data], galaxy_header, cat_details, "delete.txt")
+    write_catagloue([group_data_to_write], group_header, cat_details, 'test_delete.txt')
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    galaxy_data = read_lightcone(LIGHTCONE_DIR, SUB_DIR, GALAXY_FIELDS, SUB_VOLUMES, "mock")
+    group_data = read_lightcone(LIGHTCONE_DIR, SUB_DIR, GROUP_FIELDS, SUB_VOLUMES, "mock")
+    _, sed_data = read_photometry_data_hdf5(
+        LIGHTCONE_DIR, SUB_DIR, SED_FIELDS, SUB_VOLUMES, SED_FILE)
+
+    # filtering the data
+    indicies = np.where((sed_data[cat_details.mag_filter] < cat_details.mag_cut)
+        & (sed_data[cat_details.mag_filter] > 0))[0]
+    sed_data = {key: value[indicies] for key, value, in sed_data.items()}
+    galaxy_data = {key: value[indicies] for key, value in galaxy_data.items()}
+
+    # Working out calculated properties
+    galaxy_data = GalaxyTable(galaxy_data, GALAXY_PROPERTIES, cosmo)
+    group_data = GroupTable(group_data, GROUP_PROPERTIES, cosmo)
+
+    # Writing
+    galaxy_header, galaxy_data_to_write = galaxy_data.sample(list_of_columns=PROPS_TO_WRITE)
+    group_header, group_data_to_write = group_data.sample(list_of_columns=GALAXY_PROPS_TO_WRITE)
+    write_catagloue([galaxy_data_to_write, sed_data], galaxy_header, cat_details, "delete.txt")
+    write_catagloue([group_data_to_write], group_header, cat_details, 'test_delete.txt')
