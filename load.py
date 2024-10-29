@@ -47,12 +47,12 @@ class Config:
         Takes either 'sed' or 'mock' and then returns the parent directory and the file name.
         This is so that we can more easily handle the file paths in functions in the read module.
         """
-        if file_type == 'sed':
+        if file_type == "sed":
             file_name = self.dirs.sed_file
-        elif file_type == 'mock':
+        elif file_type == "mock":
             file_name = self.dirs.lightcone_file
         else:
-            raise ValueError(f'file_type must be "sed" or "mock" not {file_type}')
+            raise ValueError(f'file_type must be "sed" or "mock" not "{file_type}"')
         return self.dirs.lightcone_directory, self.dirs.sub_directory, file_name
 
     def print_full_file_name(self, file_type: str, sub_volume: int) -> str:
@@ -63,10 +63,9 @@ class Config:
         return os.path.join(parent_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5")
 
 
-
 def load_cosmo(input_params: dict) -> FlatLambdaCDM:
     """
-    Reads in the Cosmology parameters and creates an obect.
+    Reads in the Cosmology parameters and creates an object.
     """
     return FlatLambdaCDM(
         H0=input_params["Cosmology"]["H0"], Om0=input_params["Cosmology"]["Om0"]
@@ -100,14 +99,14 @@ def load_read_properties(input_parameters: dict) -> tuple[dict]:
 
     # Checking that these fields actually even exist in the first place.
     bad_group_fields = [
-        key for key in group_fields['groups'] if key not in GROUP_PROPERTIES.keys()
+        key for key in group_fields["groups"] if key not in GROUP_PROPERTIES.keys()
     ]
     bad_galaxy_fields = [
-        key for key in galaxy_fields['galaxies'] if key not in GALAXY_PROPERTIES.keys()
+        key for key in galaxy_fields["galaxies"] if key not in GALAXY_PROPERTIES.keys()
     ]
     if len(bad_group_fields) > 0 or len(bad_galaxy_fields) > 0:
         raise AttributeError(
-            f"{len(bad_group_fields)} bad group fields found and {len(bad_galaxy_fields)} bad galaxy fields found. \nBad group fields: {bad_group_fields} \nBad galaxy fields: {bad_galaxy_fields}"
+            f"{len(bad_group_fields)} bad group field(s) and {len(bad_galaxy_fields)} bad galaxy field(s) found. \nBad group fields: {bad_group_fields} \nBad galaxy fields: {bad_galaxy_fields}"
         )
     return group_fields, galaxy_fields
 
@@ -153,11 +152,20 @@ def load_directory_string(input_parameters: dict) -> FileStrings:
 
     # Checking that the files exist.
     sed_files = [
-        f"{file_strings.lightcone_directory}{file_strings.sub_directory}{file_strings.sed_file}_{sub_volume:02d}.hdf5"
+        os.path.join(
+            file_strings.lightcone_directory,
+            file_strings.sub_directory,
+            f"{file_strings.sed_file}_{sub_volume:02d}.hdf5",
+        )
         for sub_volume in sub_volumes
     ]
+
     mock_files = [
-        f"{file_strings.lightcone_directory}{file_strings.sub_directory}{file_strings.lightcone_file}_{sub_volume:02d}.hdf5"
+        os.path.join(
+            file_strings.lightcone_directory,
+            file_strings.sub_directory,
+            f"{file_strings.lightcone_file}_{sub_volume:02d}.hdf5",
+        )
         for sub_volume in sub_volumes
     ]
     for sed_file in sed_files:
@@ -187,7 +195,9 @@ def validate_input_file(input_parameters: dict) -> None:
         "Lightcone_file",
         "Sub_Volumes",
     ]
-    additional = [key for key in input_parameters.keys() if key not in required_settings]
+    additional = [
+        key for key in input_parameters.keys() if key not in required_settings
+    ]
     missing = [key for key in required_settings if key not in input_parameters.keys()]
     if len(missing) > 0:
         raise ValueError(
