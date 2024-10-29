@@ -1,0 +1,28 @@
+Cosmology:
+  H0: 67.51
+  Om0: 0.3
+
+Catalogue_Details:
+  area: 107.889
+  mag_filter: "total_ap_dust_Z_VISTA"
+  mag_cut: 21.2
+  redshift_cut: 3
+  version: "a0.0.1"
+
+Properties_To_Read_In:
+  groups: [id_group_sky, ra, dec, zobs, subvolume, tile, id_halo_sam, flag, snapshot]
+  galaxies: [ra, dec, zobs, id_galaxy_sky, sfr_burst, sfr_disk, mstars_bulge, mstars_disk, rstar_bulge_apparent, rstar_disk_apparent, id_group_sky, dc, mvir_hosthalo, type, tile, subvolume, id_halo_sam, snapshot]
+
+Properties_To_Write:
+  groups: [unique_group_id, ra, dec, zobs, flag]
+  galaxies: [id_galaxy_sky, ra, dec, zobs, log_mstar_total, log_sfr_total, bt, re, unique_group_id]
+
+SED_fields:
+  SED/ap_dust: [total]
+  SED/ab_dust: [total]
+
+Lightcone_Directory: "/scratch/pawsey0119/clagos/Stingray/output/medi-SURFS/Shark-TreeFixed-ReincPSO-kappa0p002/deep-optical-final/"
+Sub_Directory: "split/"
+SED_file: "Sting-SED-VST-eagle-rr14"
+Lightcone_file: 'mock'
+Sub_Volumes: [0, 1]

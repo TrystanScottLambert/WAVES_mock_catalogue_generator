@@ -2,23 +2,28 @@
 General functions used for building the WAVES mock catalogue.
 """
 
-import os
 from collections import defaultdict
 
 import h5py
 import numpy as np
 
+from load import Config
 
-def read_lightcone(
-    model_dir: str, sub_dir: str, fields: dict, sub_volumes: np.ndarray, file_name: str
-) -> list[np.ndarray]:
+
+def read_lightcone(config: Config, source_type: str) -> list[np.ndarray]:
     """Read the mock file for the given model/subvolume as efficiently as possible."""
+
+    if source_type == "gal":
+        fields = config.gal_props_read
+    elif source_type == "group":
+        fields = config.group_props_read
+    else:
+        raise ValueError(f'type must be either "group" or "gal", not {source_type}')
+
     data = defaultdict(list)
-    for sub_volume in sub_volumes:
-        full_name = os.path.join(
-            model_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5"
-        )
-        print(f"Reading galaxies data from {full_name}")
+    for sub_volume in config.dirs.sub_volumes:
+        full_name = config.print_full_file_name("mock", sub_volume)
+        print(f"Reading galaxies data from: {full_name}")
         with h5py.File(full_name, "r") as f:
             for group_name, data_names in fields.items():
                 group = f[group_name]
@@ -31,11 +36,11 @@ def read_lightcone(
     return data
 
 
-def read_filter_names(model_dir: str, sub_dir: str, sed_file: str) -> list[str]:
+def read_filter_names(config: Config) -> list[str]:
     """
     Returns a list of the filter names for the given sed file.
     """
-    full_name = os.path.join(model_dir, sub_dir, f"{sed_file}_00.hdf5")
+    full_name = config.print_full_file_name("sed", 0)
     with h5py.File(full_name, "r") as f:
         filter_names = f["filters"][:]
         filter_names = [filter_name.decode() for filter_name in filter_names]
@@ -60,22 +65,20 @@ def combine_filters_and_data(filter_names: list[str], filter_data: dict) -> dict
     return new_data
 
 
-def read_photometry_data_hdf5(
-    model_dir: str, sub_dir: str, fields: dict, sub_volumes: np.ndarray, sed_file: str
-) -> tuple[np.ndarray, list]:
+def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, list]:
     """Read the Sting-SED*.hdf5 file for the given model/subvolume"""
 
     data = defaultdict(list)
     ids = []
 
-    for subv in sub_volumes:
-        full_name = os.path.join(model_dir, sub_dir, f"{sed_file}_{subv:02d}.hdf5")
+    for sub_volume in config.dirs.sub_volumes:
+        full_name = config.print_full_file_name("sed", sub_volume)
         print(f"Reading galaxies data from {full_name}")
 
         with h5py.File(full_name, "r") as file:
             ids.append(file["id_galaxy_sky"][()])
 
-            for group_name, data_names in fields.items():
+            for group_name, data_names in config.sed_fields.items():
                 group = file[group_name]
                 for data_name in data_names:
                     full_data_path = f"{group_name}/{data_name}"
@@ -85,6 +88,6 @@ def read_photometry_data_hdf5(
     for key in data:
         data[key] = np.concatenate(data[key], axis=1)
 
-    filters = read_filter_names(model_dir, sub_dir, sed_file)
+    filters = read_filter_names(config)
     data = combine_filters_and_data(filters, data)
     return ids, data
