@@ -10,7 +10,7 @@ import numpy as np
 from load import Config
 
 
-def read_lightcone(config: Config, source_type: str) -> list[np.ndarray]:
+def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     """Read the mock file for the given model/subvolume as efficiently as possible."""
 
     if source_type == "gal":
@@ -18,7 +18,7 @@ def read_lightcone(config: Config, source_type: str) -> list[np.ndarray]:
     elif source_type == "group":
         fields = config.group_props_read
     else:
-        raise ValueError(f'type must be either "group" or "gal", not {source_type}')
+        raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
 
     data = defaultdict(list)
     for sub_volume in config.dirs.sub_volumes:
@@ -32,7 +32,6 @@ def read_lightcone(config: Config, source_type: str) -> list[np.ndarray]:
 
     for key in data:
         data[key] = np.concatenate(data[key], axis=0)
-
     return data
 
 
@@ -55,7 +54,6 @@ def combine_filters_and_data(filter_names: list[str], filter_data: dict) -> dict
     """
     # Restructuring the dictionary
     new_data = {}
-
     for old_key, arrays in filter_data.items():
         components = old_key.split("/")
 
@@ -65,7 +63,7 @@ def combine_filters_and_data(filter_names: list[str], filter_data: dict) -> dict
     return new_data
 
 
-def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, list]:
+def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, dict]:
     """Read the Sting-SED*.hdf5 file for the given model/subvolume"""
 
     data = defaultdict(list)

@@ -1,137 +1,135 @@
 """
-Testing the functions in the 'read' module.
+Testing the read module.
 """
 
-import os
-import sys
 import unittest
-import tempfile
+from unittest.mock import patch, MagicMock
+from astropy.cosmology import FlatLambdaCDM
 import numpy as np
-import h5py
+import numpy.testing as npt
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from load import Config, FileStrings
+from write import CatalogueDetails
+from read import (
+    read_lightcone,
+    combine_filters_and_data,
+    read_filter_names,
+)
 
-from read import read_lightcone, read_filter_names, combine_filters_and_data
 
+cat_details = CatalogueDetails(1, "g", 20, 0.6, "1.0")
+dirs = FileStrings(
+    lightcone_directory="light_dir",
+    sub_directory="sub_dir",
+    lightcone_file="light_file",
+    sed_file="sed_file",
+    sub_volumes=np.array([0, 1]),
+)
 
-class TestReadLightcone(unittest.TestCase):
+test_config = Config(
+    FlatLambdaCDM(H0=70, Om0=0.3),
+    cat_details,
+    {"galaxies": ["ra", "dec"]},
+    {"groups": ["ra", "dec"]},
+    ["ra", "dec", "angsep"],
+    ["ra", "dec", "flag"],
+    {"SED/ab_dust": ["total"]},
+    dirs=dirs,
+)
+
+class TestReadLightCone(unittest.TestCase):
     """
-    Testing the 'read_lightcone' function.
+    Testing the read_lightcone function.
     """
 
-    def setUp(self):
-        self.test_dir = tempfile.TemporaryDirectory()
-        self.model_dir = self.test_dir.name
-        self.sub_dir = "subdir"
-        os.makedirs(os.path.join(self.model_dir, self.sub_dir), exist_ok=True)
-
-        # Define the sample fields structure and sub_volumes array
-        self.fields = {"galaxies": ["dec", "ra", "zobs"]}
-        self.sub_volumes = np.array([0, 1])  # Example subvolume identifiers
-        self.file_name = "test_file"
-
-        # Create small HDF5 files in the temporary directory
-        for sub_volume in self.sub_volumes:
-            file_path = os.path.join(
-                self.model_dir, self.sub_dir, f"{self.file_name}_{sub_volume:02d}.hdf5"
-            )
-            with h5py.File(file_path, "w") as f:
-                grp = f.create_group("galaxies")
-                grp.create_dataset("dec", data=np.random.rand(10))
-                grp.create_dataset("ra", data=np.random.rand(10))
-                grp.create_dataset("zobs", data=np.random.rand(10))
-
-    def tearDown(self):
-        self.test_dir.cleanup()
-
-    def test_read_lightcone(self):
-        """Call the read_lightcone function"""
-        data = read_lightcone(
-            model_dir=self.model_dir,
-            sub_dir=self.sub_dir,
-            fields=self.fields,
-            sub_volumes=self.sub_volumes,
-            file_name=self.file_name,
+    def test_input_validation(self):
+        """Tests that if the wrong source type is entered an error is raised."""
+        with self.assertRaises(ValueError) as context:
+            read_lightcone('this doesn"t matter', "not_correct_source_type")
+        self.assertEqual(
+            str(context.exception),
+            'Type must be either "group" or "gal", not "not_correct_source_type"',
         )
 
-        # Assert that all specified fields are in the output
-        for field in self.fields["galaxies"]:
-            self.assertIn(field, data)
-            # Check that data arrays are non-empty and have the expected length
-            self.assertEqual(
-                len(data[field]), 20
-            )  # Should be 10 entries per subvolume * 2 sub_volumes
-            self.assertTrue(isinstance(data[field], np.ndarray))
+    @patch("h5py.File", autospec=True)
+    def test_read_lightcone(self, mock_h5py_file):
+        """Test reading data with correct input by focusing on mocking h5py.File."""
 
+        # Mock data that should be returned by the HDF5 file structure
+        mock_data = {
+            "galaxies": {"ra": np.array([1.1, 1.2]), "dec": np.array([2.1, 2.2])}
+        }
 
-class TestReadFilterNames(unittest.TestCase):
-    """
-    Testing the read_filters function.
-    """
+        # Create a mock for the HDF5 file structure with dataset access
+        mock_file = {}
+        for group_name, datasets in mock_data.items():
+            mock_group = {}
+            for dataset_name, data in datasets.items():
+                dataset_mock = MagicMock()
+                dataset_mock.__getitem__.return_value = (
+                    data  # Return the array directly
+                )
+                mock_group[dataset_name] = dataset_mock
+            mock_file[group_name] = mock_group
 
-    def setUp(self):
-        self.test_dir = tempfile.TemporaryDirectory()
-        self.model_dir = self.test_dir.name
-        self.sub_dir = "subdir"
-        os.makedirs(os.path.join(self.model_dir, self.sub_dir), exist_ok=True)
+        # Set the return value of `h5py.File` context manager to this mock file structure
+        mock_h5py_file.return_value.__enter__.return_value = mock_file
 
-        # Create a mock HDF5 file
-        self.sed_file = "test_sed_file"
-        self.file_path = os.path.join(
-            self.model_dir, self.sub_dir, f"{self.sed_file}_00.hdf5"
-        )
+        # Update test_config to only include a single subvolume
+        test_config.dirs.sub_volumes = np.array([0])
 
-        # Create an HDF5 file with mock filter names
-        with h5py.File(self.file_path, "w") as f:
-            filter_names = np.array([b"filter_a", b"filter_b", b"filter_c"], dtype="S")
-            f.create_dataset("filters", data=filter_names)
-
-    def tearDown(self):
-        # Clean up the temporary directory
-        self.test_dir.cleanup()
-
-    def test_read_filter_names(self):
-        """
-        Testing the read_filter function
-        """
-        filter_names = read_filter_names(
-            model_dir=self.model_dir, sub_dir=self.sub_dir, sed_file=self.sed_file
-        )
-
-        expected_filter_names = ["filter_a", "filter_b", "filter_c"]
-        self.assertEqual(filter_names, expected_filter_names)
+        result = read_lightcone(test_config, "gal")
+        expected_result = {"ra": np.array([1.1, 1.2]), "dec": np.array([2.1, 2.2])}
+        npt.assert_equal(result, expected_result)
 
 
 class TestCombineFiltersAndData(unittest.TestCase):
     """
-    Testing the combine_filters_and_data function.
+    Testing the combine_filters_and_data function
     """
-    def test_combine_filters_and_data(self):
-        """
-        Simple test.
-        """
-        filter_names = ["FUV_GALEX", "NUV_GALEX", "Band8_ALMA"]
 
-        filter_data = {
-            "SED/ab_dust/total": [np.array([1, 2, 3]), np.array([4, 5, 6]), np.array([7, 8, 9])],
-            "SED/ab_dust/bulge": [np.array([10, 11, 12]), np.array([13, 14, 15]), np.array([16, 17, 18])]
+    test_names = ["r", "g", "b"]
+    test_data = {
+        "SED/ab_dust/total": [
+            np.array([20, 21]),
+            np.array([19, 18]),
+            np.array([22, 23]),
+        ]
+    }
+
+    def test_run(self):
+        "testing that the function returns the correct output"
+        correct = {
+            "total_ab_dust_r": np.array([20, 21]),
+            "total_ab_dust_g": np.array([19, 18]),
+            "total_ab_dust_b": np.array([22, 23]),
         }
+        val = combine_filters_and_data(self.test_names, self.test_data)
+        npt.assert_equal(correct, val)
 
-        expected_output = {
-            "total_ab_dust_FUV_GALEX": np.array([1, 2, 3]),
-            "total_ab_dust_NUV_GALEX": np.array([4, 5, 6]),
-            "total_ab_dust_Band8_ALMA": np.array([7, 8, 9]),
-            "bulge_ab_dust_FUV_GALEX": np.array([10, 11, 12]),
-            "bulge_ab_dust_NUV_GALEX": np.array([13, 14, 15]),
-            "bulge_ab_dust_Band8_ALMA": np.array([16, 17, 18])
-        }
 
-        result = combine_filters_and_data(filter_names, filter_data)
+class TestReadFilterNames(unittest.TestCase):
+    """
+    Testing the read_filter function
+    """
 
-        for key in expected_output:
-            with self.subTest(key=key):
-                np.testing.assert_array_equal(result[key], expected_output[key])
+    @patch("h5py.File", autospec=True)
+    def test_read_filter_names(self, mock_h5py_file):
+        """Test that filter names are read and decoded correctly."""
 
+        # Define mock filter names as byte strings like the structure of the HDF5 file dataset
+        mock_filter_names = [b"u", b"g", b"r", b"i", b"z"]
+
+        # Create a mock for the HDF5 file structure with `filters` dataset
+        mock_file = MagicMock()
+        mock_file.__getitem__.return_value = (
+            mock_filter_names  # `f["filters"][:]` returns mock_filter_names
+        )
+        mock_h5py_file.return_value.__enter__.return_value = {"filters": mock_file}
+
+        result = read_filter_names(test_config)
+        expected_result = ["u", "g", "r", "i", "z"]
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":
