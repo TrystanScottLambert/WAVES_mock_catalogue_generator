@@ -70,7 +70,7 @@ class CalculatedTable:
         """
         return getattr(self, column_name)
 
-    def sample(self, list_of_columns: list[str] = None) -> tuple[str, dict]:
+    def sample(self, list_of_columns: list[str] = None) -> tuple[dict, dict]:
         """
         Takes a subsample of column names that want to be written and returns the header to be
         written to the file as well as a dictionary that can be combined with sed data or other
@@ -82,12 +82,9 @@ class CalculatedTable:
             list_of_columns = self.list_columns()
 
         columns = [self.get_column(col_name) for col_name in list_of_columns]
-        writeable_dict = {}
-        header = ""
-        for column in columns:
-            header += f"# {column.column_name}: {column.description} \n"
-            writeable_dict[column.column_name] = column.data
-        return header, writeable_dict
+        header_dict = {column.column_name : column.description for column in columns}
+        writeable_dict = {column.column_name : column.data for column in columns}
+        return header_dict, writeable_dict
 
 
 class GalaxyTable(CalculatedTable):
