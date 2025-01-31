@@ -8,24 +8,6 @@ import numpy as np
 from astropy.cosmology import FlatLambdaCDM
 
 
-def create_unique_group_id(
-    ids_halo_sam: np.ndarray[float],
-    snap_shots: np.ndarray[float],
-    sub_volumes: np.ndarray[int],
-    tiles: np.ndarray[int],
-) -> np.ndarray[str]:
-    """
-    Creates a unique group id that can be used later. This will be replaced by the next run of stringray
-    """
-    unique_ids = [
-        f"{sam_id}_{snap_shot}_{sub_volume}_{tile}"
-        for sam_id, snap_shot, sub_volume, tile in zip(
-            ids_halo_sam, snap_shots, sub_volumes, tiles
-        )
-    ]
-    return np.array(unique_ids)
-
-
 @dataclass
 class DataDescription:
     """
@@ -145,38 +127,7 @@ class GalaxyTable(CalculatedTable):
         )
         return DataDescription(column_name, description, value)
 
-    @property
-    def unique_group_id(self) -> DataDescription:
-        """
-        Hacked togther unique group_id. This will have to be depreciated once the
-        group_id is fixed in future stingray versions.
-        """
-        column_name = "unique_group_id"
-        description = (
-            "Hacked tother tempary solution. This will be depreciated. Unique group id."
-        )
-        value = create_unique_group_id(
-            self.id_halo_sam.data, self.snapshot.data, self.subvolume.data, self.tile.data
-        )
-        return DataDescription(column_name, description, value)
-
-
 class GroupTable(CalculatedTable):
     """
     Managing the data that was read from the hdf5 files.
     """
-
-    @property
-    def unique_group_id(self) -> DataDescription:
-        """
-        Hacked togther unique group_id. This will have to be depreciated once the
-        group_id is fixed in future stingray versions.
-        """
-        column_name = "unique_group_id"
-        description = (
-            "Hacked tother tempary solution. This will be depreciated. Unique group id."
-        )
-        value = create_unique_group_id(
-            self.id_halo_sam.data, self.snapshot.data, self.subvolume.data, self.tile.data
-        )
-        return DataDescription(column_name, description, value)

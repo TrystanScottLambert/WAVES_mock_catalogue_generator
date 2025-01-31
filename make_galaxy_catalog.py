@@ -10,13 +10,14 @@ from write import write_to_parquet
 from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
 from table_formats import GalaxyTable, GroupTable
 
-config = load_all()  # this will also perform the input validation.
 
 
 def main():
     """
     Main function to to manage scoping.
     """
+    config = load_all()  # this will also perform the input validation.
+
     # Reading the data from the hdf5 files
     galaxy_data = read_lightcone(config, "gal")
     group_data = read_lightcone(config, "group")
@@ -46,10 +47,10 @@ def main():
         [galaxy_data_to_write, sed_data],
         galaxy_header,
         cat_details,
-        "test_gals.parquet",
+        config.galaxy_outfile_name,
     )
     write_to_parquet(
-        [group_data_to_write], group_header, cat_details, "test_groups.parquet"
+        [group_data_to_write], group_header, cat_details, config.group_outfile_name
     )
 
 

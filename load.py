@@ -41,6 +41,14 @@ class Config:
     group_props_write: list
     sed_fields: dict
     dirs: FileStrings
+    outfile_prefix: str
+
+    def __post_init__(self):
+        """
+        Create the outfile names post init
+        """
+        self.galaxy_outfile_name = f'{self.outfile_prefix}_gals.parquet'
+        self.group_outfile_name = f'{self.outfile_prefix}_groups.parquet'
 
     def dump_directory(self, file_type: str) -> tuple[str, str, str]:
         """
@@ -194,6 +202,7 @@ def validate_input_file(input_parameters: dict) -> None:
         "SED_file",
         "Lightcone_file",
         "Sub_Volumes",
+        "Outfile_Prefix"
     ]
     additional = [
         key for key in input_parameters.keys() if key not in required_settings
@@ -237,4 +246,5 @@ def load_all() -> Config:
         group_props_write=group_write_props,
         sed_fields=settings["SED_fields"],
         dirs=file_strings,
+        outfile_prefix=settings['Outfile_Prefix']
     )
