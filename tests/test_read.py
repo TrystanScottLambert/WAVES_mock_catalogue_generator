@@ -2,9 +2,11 @@
 Testing the read module.
 """
 
+import os
 import unittest
 from unittest.mock import patch, MagicMock
 from astropy.cosmology import FlatLambdaCDM
+import h5py
 import numpy as np
 import numpy.testing as npt
 
@@ -14,6 +16,8 @@ from read import (
     read_lightcone,
     combine_filters_and_data,
     read_filter_names,
+    read_spectra,
+    read_all_spectra
 )
 
 
@@ -35,6 +39,7 @@ test_config = Config(
     ["ra", "dec", "flag"],
     {"SED/ab_dust": ["total"]},
     dirs=dirs,
+    outfile_prefix='test_out',
 )
 
 class TestReadLightCone(unittest.TestCase):
@@ -131,6 +136,77 @@ class TestReadFilterNames(unittest.TestCase):
         expected_result = ["u", "g", "r", "i", "z"]
         self.assertEqual(result, expected_result)
 
+
+class TestReadSpectra(unittest.TestCase):
+    """
+    Testing the reading of the spectra files (the spectra that get passed into prospect.)
+    """
+    def setUp(self):
+        """
+        Setting up a random hdf5 file which mimics the one on pawsey
+        """
+        id_galaxy_sky = np.array([1, 2, 3, 4, 5])
+        spectra = np.random.rand(10, 5)  # 5 galaxies, each with 10 spectral values
+        wavegrid = np.linspace(4000, 7000, 10)  # Example wavelength grid
+        with h5py.File("test_spectra_1.hdf5", "w") as f:
+            f.create_dataset("id_galaxy_sky", data=id_galaxy_sky)
+            f.create_dataset("spectra", data=spectra)
+            f.create_dataset("wavegrid", data=wavegrid)
+
+        id_galaxy_sky = np.array([11, 21, 31, 41])
+        spectra = np.random.rand(10, 4)  # 5 galaxies, each with 10 spectral values
+        with h5py.File("test_spectra_2.hdf5", "w") as f:
+            f.create_dataset("id_galaxy_sky", data=id_galaxy_sky)
+            f.create_dataset("spectra", data=spectra)
+            f.create_dataset("wavegrid", data=wavegrid)
+
+    def test_no_matching(self):
+        """
+        Testing when no matches are passed.
+        """
+        table = read_spectra("test_spectra_1.hdf5")
+        self.assertEqual(table.shape[0], 5)
+        self.assertEqual(table.shape[1], 11) # 10 + 1 including the id
+
+    def test_matching(self):
+        """
+        Testing that we can match the catalog to only read galaxies that 
+        we want.
+        """
+        good_list = np.arange(3, 7) # This isn't a subset of the ids.
+        good_list = np.append(good_list, np.array([1])) # just to have a non sequential value.
+        table = read_spectra("test_spectra_1.hdf5", match=True, match_ids=good_list)
+
+        npt.assert_array_equal(table[:,0], np.array([1, 3, 4, 5]))
+        self.assertEqual(table.shape[0], 4)
+        self.assertEqual(table.shape[1], 11)
+    
+    def test_read_all_no_match(self):
+        """
+        Testing reading all the spectra over multiple hdf5 files.
+        """
+        directory = './'
+        file_stub = 'test_spectra_'
+        table = read_all_spectra(directory, file_stub)
+        self.assertEqual(table.shape[0], 9)
+        self.assertEqual(table.shape[1], 11)
+        npt.assert_array_equal(table[:, 0], np.array([1, 2, 3, 4, 5, 11, 21, 31, 41]))
+    
+    def test_read_all_matches(self):
+        """
+        Testing the case where we have only some galaxies in hdf5 that we want to match to.
+        """
+        directory = './'
+        file_stub = 'test_spectra_'
+        good_list = np.array([2, 4, 11, 31, 102])
+        table = read_all_spectra(directory, file_stub, matching_ids=good_list)
+        self.assertEqual(table.shape[0], 4)
+        self.assertEqual(table.shape[1], 11)
+        npt.assert_array_equal(table[:, 0], good_list[:-1])
+
+    def tearDown(self):
+        os.remove('test_spectra_1.hdf5')
+        os.remove('test_spectra_2.hdf5')
 
 if __name__ == "__main__":
     unittest.main()

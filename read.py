@@ -3,11 +3,64 @@ General functions used for building the WAVES mock catalogue.
 """
 
 from collections import defaultdict
+import warnings
 
 import h5py
 import numpy as np
+import glob
 
 from load import Config
+
+
+def read_spectra(
+    file_name: str, match: bool = False, match_ids: np.ndarray[float] = None
+) -> np.ndarray[np.ndarray]:
+    """
+    Reads a spectra file and returns a 2d array where every row is the galaxy the columns are
+    the wavelength.
+
+    |sky_id| val1 val2 val3 ....
+
+    The wavelengths can/should be read separately.
+    """
+    spectra = h5py.File(file_name)
+    sky_ids = spectra["id_galaxy_sky"][:]
+
+    if match is True:
+        sky_id_matches = np.intersect1d(sky_ids, match_ids)
+        idx_matches = np.array(
+            [np.where(sky_ids == sky_id)[0][0] for sky_id in sky_id_matches]
+        )
+        all_spectra = spectra["spectra"][:, idx_matches]
+        sky_ids = sky_ids[idx_matches]
+
+    else:
+        warnings.warn("Not matching the indicies will take a long time.")
+        all_spectra = spectra["spectra"][:]
+
+    spectra_table = all_spectra.T  # have every row be a galaxy.
+    full_table = np.hstack((sky_ids.reshape(len(sky_ids), 1), spectra_table))
+    return full_table
+
+
+def read_all_spectra(
+    directory: str, file_stub: str, matching_ids: np.ndarray[int] = None
+) -> np.ndarray[np.ndarray]:
+    """
+    Reads the spectra files and concatenates the entire thing into a single parquet file.
+    """
+    spectra_files = np.sort(glob.glob(f"{directory}/{file_stub}*.hdf5"))
+    if matching_ids is not None:
+        spectra_table = np.vstack(
+            [
+                read_spectra(file, match=True, match_ids=matching_ids)
+                for file in spectra_files
+            ]
+        )
+    else:
+        spectra_table = np.vstack([read_spectra(file) for file in spectra_files])
+
+    return spectra_table
 
 
 def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
