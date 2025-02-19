@@ -4,7 +4,7 @@ Testing the load module.
 
 import os
 import warnings
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import unittest
 import numpy as np
 import numpy.testing as npt
@@ -55,7 +55,8 @@ class TestConfig(unittest.TestCase):
             gal_props_write=['zobs', 'zcos'],
             group_props_write=['angsep'],
             sed_fields={'SED/dust': ['total']},
-            dirs = FileStrings('light_dir', 'sub_dir', 'light_file', 'sed_file', np.arange(2))
+            dirs = FileStrings('light_dir', 'sub_dir', 'light_file', 'sed_file', np.arange(2)),
+            outfile_prefix='test'
         )
 
     def test_read(self):
@@ -289,6 +290,7 @@ class TestValidateInputFile(unittest.TestCase):
             "SED_file": "sed_file",
             "Lightcone_file": "lightcone_file",
             "Sub_Volumes": [0, 1, 2],
+            "Outfile_Prefix": "test",
         }
 
     def test_validate_input_file_all_settings_present(self):
@@ -384,7 +386,8 @@ class TestLoadAllFunction(unittest.TestCase):
             "Sub_Directory": "/path/to/sub/",
             "SED_file": "sed_file",
             "Lightcone_file": "lightcone_file",
-            "Sub_Volumes": [0, 1, 2]
+            "Sub_Volumes": [0, 1, 2],
+            "Outfile_Prefix": "test",
         }
 
         # Mock returns for dependent functions
