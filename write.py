@@ -5,6 +5,7 @@ Module consisting of classes and functions which are used in the writing of the 
 from typing import TextIO
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -57,18 +58,6 @@ class CatalogueDetails:
         string_dict = {key: str(value) for key, value in orig_dict.items()}
         return string_dict
 
-
-def convert_description_dict_to_string(description_dict: dict) -> str:
-    """
-    Takes the dictionary of descriptions and converts that into a string which can be written
-    to file.
-    """
-    header = ""
-    for key, value in description_dict.items():
-        header += f"# {key}: {value} \n"
-    return header
-
-
 def write_to_parquet(
     writeable_dicts: list[dict],
     unit_header: dict,
@@ -100,29 +89,12 @@ def write_to_parquet(
     pq.write_table(table, outfile)
 
 
-def write_catagloue(
-    writable_dicts: list[dict],
-    unit_header: dict,
-    cat_details: CatalogueDetails,
-    outfile: str,
-    delimeter: str = " ",
+def write_spectra_table_to_parquet(
+    data: np.ndarray[np.ndarray], wavelength: np.ndarray, outfile: str
 ) -> None:
     """
-    Co-adds all the writeable dicts in the order that they were given.
-    Adds the headers too.
+    Writes a 2D numpy array that represents the spectra table to a parquet.
+    The first column is assumed to be 'id_galaxy_sky', and the remaining columns are spectra values.
     """
-    final_dict = {
-        key: value for dictionary in writable_dicts for key, value in dictionary.items()
-    }
-    with open(outfile, "w", encoding="utf-8") as file:
-        # Writing the header
-        stamp_preamble(file)
-        cat_details.stamp_details(file)
-        file.write(convert_description_dict_to_string(unit_header))
-
-        # Writing column names
-        file.write(f"{delimeter.join(final_dict.keys())} \n")
-
-        # Writing column data
-        for row in zip(*final_dict.values()):
-            file.write(f"{delimeter.join(map(str, row))} \n")
+    df = pd.DataFrame(data, columns=["id_galaxy_sky"] + wavelength.astype(str).tolist())
+    df.to_parquet(outfile, index=False)

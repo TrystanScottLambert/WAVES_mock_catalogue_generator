@@ -202,7 +202,7 @@ def validate_input_file(input_parameters: dict) -> None:
         "SED_file",
         "Lightcone_file",
         "Sub_Volumes",
-        "Outfile_Prefix"
+        "Outfile_Prefix",
     ]
     additional = [
         key for key in input_parameters.keys() if key not in required_settings

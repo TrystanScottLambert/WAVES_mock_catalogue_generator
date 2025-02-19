@@ -4,13 +4,16 @@ Tests for the 'write' module.
 
 import tempfile
 import unittest
-
 import sys
 import os
 
+import numpy as np
+import numpy.testing as npt
+import pandas as pd
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from write import stamp_preamble, CatalogueDetails, write_catagloue
+from write import stamp_preamble, CatalogueDetails, write_spectra_table_to_parquet
 
 
 HEADER_PREAMBLE_DIR = "header_preamble/header_preamble_v1.head"
@@ -75,59 +78,27 @@ class TestCatalogueDetails(unittest.TestCase):
         self.assertEqual(stamped_content, self.expected_output)
 
 
-class TestWriteCatalogue(unittest.TestCase):
+class TestWritingSpectra(unittest.TestCase):
     """
-    Testing the write_catalogue function.
+    Testing the write functionailty of the spectra files.
     """
-
-    def setUp(self):
-
-        self.temp_file_name = "temp.txt"
-
-        self.writable_dicts = [
-            {"col1": [1, 2, 3], "col2": [4, 5, 6]},
-            {"col3": [7, 8, 9]},
-        ]
-        self.unit_header = "# Units: \n"
-        self.cat_details = CatalogueDetails(
-            area=500.0, mag_filter="g", mag_cut=22.5, redshift_cut=0.5, version=1.0
-        )
-        self.delimeter = " "
-        with open(HEADER_PREAMBLE_DIR, encoding="utf8") as preamble_file:
-            preamble = preamble_file.read()
-
-        self.expected_output = preamble + (
-            "# Lightcone Details: \n"
-            "# area: 500.0 deg2 \n# g <= 22.5 \n"
-            "# redshift < 0.5 \n# VERSION: v1.0 \n"
-            "# Units: \n"
-            "col1 col2 col3 \n"
-            "1 4 7 \n"
-            "2 5 8 \n"
-            "3 6 9 \n"
-        )
-
-    def test_write_catagloue(self):
+    def test_write(self):
         """
-        Testing writing functionality.
+        creating a fake 2d array with values and ensureing it's written.
         """
-        with open(self.temp_file_name, "w", encoding="utf-8") as temp_file:
-            outfile = temp_file.name
-
-            write_catagloue(
-                writable_dicts=self.writable_dicts,
-                unit_header=self.unit_header,
-                cat_details=self.cat_details,
-                outfile=outfile,
-                delimeter=self.delimeter,
-            )
-
-            with open(outfile, "r", encoding="utf-8") as f:
-                output = f.read()
-            self.assertEqual(output, self.expected_output)
-
-    def tearDown(self):
-        os.remove(self.temp_file_name)
+        wavelength = np.array([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+        ids = np.array([0, 1, 2, 3]).reshape(4, 1)
+        data = np.random.rand(4, 10)
+        table = np.hstack((ids, data))
+        correct_column_headers = np.append(np.array(["id_galaxy_sky"]), np.arange(11, 21).astype(int).astype(str))
+        write_spectra_table_to_parquet(table, wavelength, 'test.parquet')
+        test_df = pd.read_parquet('test.parquet', engine='pyarrow')
+        df_ids = np.array(test_df['id_galaxy_sky'])
+        npt.assert_array_equal(df_ids, np.array([0, 1, 2, 3]))
+        self.assertEqual(len(test_df), 4)
+        npt.assert_array_equal(np.array(test_df.columns), correct_column_headers)
+        npt.assert_array_equal(np.array(test_df['id_galaxy_sky']), ids.reshape(4))
+        os.remove('test.parquet')
 
 
 if __name__ == "__main__":
