@@ -23,11 +23,14 @@ def read_spectra(
 
     The wavelengths can/should be read separately.
     """
+    print(f'Getting spectra from: {file_name}')
     spectra = h5py.File(file_name)
     sky_ids = spectra["id_galaxy_sky"][:]
 
     if match is True:
         sky_id_matches = np.intersect1d(sky_ids, match_ids)
+        if len(sky_id_matches) == 0:
+            return None
         idx_matches = np.array(
             [np.where(sky_ids == sky_id)[0][0] for sky_id in sky_id_matches]
         )
@@ -51,12 +54,11 @@ def read_all_spectra(
     """
     spectra_files = np.sort(glob.glob(f"{directory}/{file_stub}*.hdf5"))
     if matching_ids is not None:
-        spectra_table = np.vstack(
-            [
-                read_spectra(file, match=True, match_ids=matching_ids)
-                for file in spectra_files
-            ]
-        )
+        spectra_results = [ read_spectra(file, match=True, match_ids=matching_ids)
+                for file in spectra_files]
+        # Filter values that had no overlap.
+        spectra_results = [result for result in spectra_results if result is not None]
+        spectra_table = np.vstack(spectra_results)
     else:
         spectra_table = np.vstack([read_spectra(file) for file in spectra_files])
 

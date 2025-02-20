@@ -168,6 +168,14 @@ class TestReadSpectra(unittest.TestCase):
         self.assertEqual(table.shape[0], 5)
         self.assertEqual(table.shape[1], 11) # 10 + 1 including the id
 
+    def test_no_matches(self):
+        """
+        Testing the case where the matching ids have zero overlap.
+        """
+        good_list = np.arange(20, 40)
+        table = read_spectra("test_spectra_1.hdf5", match=True, match_ids=good_list)
+        self.assertIsNone(table)
+
     def test_matching(self):
         """
         Testing that we can match the catalog to only read galaxies that 
@@ -180,8 +188,8 @@ class TestReadSpectra(unittest.TestCase):
         npt.assert_array_equal(table[:,0], np.array([1, 3, 4, 5]))
         self.assertEqual(table.shape[0], 4)
         self.assertEqual(table.shape[1], 11)
-    
-    def test_read_all_no_match(self):
+
+    def test_read_all_no_matching(self):
         """
         Testing reading all the spectra over multiple hdf5 files.
         """
@@ -191,7 +199,7 @@ class TestReadSpectra(unittest.TestCase):
         self.assertEqual(table.shape[0], 9)
         self.assertEqual(table.shape[1], 11)
         npt.assert_array_equal(table[:, 0], np.array([1, 2, 3, 4, 5, 11, 21, 31, 41]))
-    
+
     def test_read_all_matches(self):
         """
         Testing the case where we have only some galaxies in hdf5 that we want to match to.
@@ -203,6 +211,18 @@ class TestReadSpectra(unittest.TestCase):
         self.assertEqual(table.shape[0], 4)
         self.assertEqual(table.shape[1], 11)
         npt.assert_array_equal(table[:, 0], good_list[:-1])
+
+    def test_read_all_blank(self):
+        """
+        Testing the case where one of the files has no overlap with matching ids.
+        """
+        directory = './'
+        file_stub = 'test_spectra_'
+        good_list = np.array([2, 4, 102]) # no ids from test_spectra_2
+        table = read_all_spectra(directory, file_stub, good_list)
+        self.assertEqual(table.shape[0], 2)
+        self.assertEqual(table.shape[1], 11)
+        npt.assert_array_equal(table[:, 0], np.array([2, 4]))
 
     def tearDown(self):
         os.remove('test_spectra_1.hdf5')
