@@ -143,7 +143,7 @@ def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, dict]:
                     full_data_path = f"{group_name}/{data_name}"
                     data[full_data_path].append(group[data_name][()])
 
-    ids = np.concatenate(ids, axis=0)
+    ids = np.concatenate(ids)
     for key in data:
         data[key] = np.concatenate(data[key], axis=1)
 

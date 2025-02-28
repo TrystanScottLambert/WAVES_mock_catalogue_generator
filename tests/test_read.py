@@ -4,7 +4,6 @@ Testing the read module.
 
 import os
 import unittest
-from unittest.mock import patch, MagicMock
 from astropy.cosmology import FlatLambdaCDM
 import h5py
 import numpy as np
@@ -18,28 +17,53 @@ from read import (
     read_filter_names,
     read_spectra,
     read_all_spectra,
+    read_photometry_data_hdf5,
 )
 
-def create_test_sed(file_name: str, number_galaxies: int, galaxy_ids: np.ndarray[int]) -> None:
+
+def create_test_sed(
+    file_name: str, number_galaxies: int, galaxy_ids: np.ndarray[int]
+) -> None:
     """
     Creates a test SED hdf5 which should mimic the shark ones.
     """
-    sed_data = {
-        "ab_dust": np.random.uniform(-25, 15, number_galaxies),
-        "ap_dust": np.random.uniform(18, 21, number_galaxies)
-    }
-    filters = np.array([b'vista_k', b'sdss_j', b'wise_w1'])
+    filters = np.array([b"vista_k", b"sdss_j", b"wise_w1"])
 
-    with h5py.File(file_name, 'w') as file:
+    ab_dust_data = {
+        "total": np.random.uniform(
+            -25, -15, (len(filters), number_galaxies)
+        ),  # Example AB magnitudes
+        "disk": np.random.uniform(
+            -25, -15, (len(filters), number_galaxies)
+        ),  # Example disk magnitudes
+    }
+
+    ap_dust_data = {
+        "total": np.random.uniform(
+            15, 25, (len(filters), number_galaxies)
+        ),  # Example apparent magnitudes
+        "disk": np.random.uniform(
+            15, 25, (len(filters), number_galaxies)
+        ),  # Example disk magnitudes
+    }
+
+    with h5py.File(file_name, "w") as file:
         sed_group = file.create_group("SED")
-        for key, data in sed_data.items():
-            sed_group.create_dataset(key, data=data)
+        ab_dust_group = sed_group.create_group("ab_dust")
+        ap_dust_group = sed_group.create_group("ap_dust")
+
+        for key, data in ab_dust_data.items():
+            ab_dust_group.create_dataset(key, data=data)
+
+        for key, data in ap_dust_data.items():
+            ap_dust_group.create_dataset(key, data=data)
 
         file.create_dataset("filters", data=filters)
         file.create_dataset("id_galaxy_sky", data=galaxy_ids)
 
 
-def create_test_hdf5( file_name: str,
+def create_test_hdf5(
+    file_name: str,
     ras: np.ndarray[float],
     decs: np.ndarray[float],
     gal_ids: np.ndarray[int],
@@ -91,7 +115,7 @@ test_config = Config(
     {"groups": ["ra", "id_group_sky"]},
     ["ra", "dec", "angsep"],
     ["ra", "dec", "flag"],
-    {"SED/ab_dust": ["total"]},
+    {"SED/ab_dust": ["total"], "SED/ap_dust": ["total"]},
     dirs=dirs,
     outfile_prefix="test_out",
 )
@@ -109,9 +133,12 @@ class TestReadLightCone(unittest.TestCase):
         group_ids_0 = np.arange(4)
         gal_ids_1 = np.arange(5) + len(gal_ids_0)
         group_ids_1 = np.arange(3) + len(group_ids_0)
-        create_test_hdf5('test_example_00.hdf5', self.ras, self.decs, gal_ids_0, group_ids_0)
-        create_test_hdf5('test_example_01.hdf5', self.ras, self.decs, gal_ids_1, group_ids_1)
-
+        create_test_hdf5(
+            "test_example_00.hdf5", self.ras, self.decs, gal_ids_0, group_ids_0
+        )
+        create_test_hdf5(
+            "test_example_01.hdf5", self.ras, self.decs, gal_ids_1, group_ids_1
+        )
 
     def test_input_validation(self):
         """Tests that if the wrong source type is entered an error is raised."""
@@ -126,13 +153,12 @@ class TestReadLightCone(unittest.TestCase):
         """
         Testing on a mocked up hdf5 file the galaxy option in particular
         """
-        data = read_lightcone(test_config, 'gal')
-        print(data)
-        npt.assert_array_equal(data['ra'], np.append(self.ras, self.ras))
-        npt.assert_array_equal(data['dec'], np.append(self.decs, self.decs))
-        npt.assert_array_equal(data['id_galaxy_sky'], np.arange(10))
+        data = read_lightcone(test_config, "gal")
+        npt.assert_array_equal(data["ra"], np.append(self.ras, self.ras))
+        npt.assert_array_equal(data["dec"], np.append(self.decs, self.decs))
+        npt.assert_array_equal(data["id_galaxy_sky"], np.arange(10))
 
-        correct_columns = ['ra', 'dec', 'id_galaxy_sky']
+        correct_columns = ["ra", "dec", "id_galaxy_sky"]
         for correct_column, read_column in zip(correct_columns, data.keys()):
             self.assertEqual(correct_column, read_column)
 
@@ -140,15 +166,13 @@ class TestReadLightCone(unittest.TestCase):
         """
         Testing same functionality as above just on groups.
         """
-        data = read_lightcone(test_config, 'group')
-        print('groups: ', data)
-        self.assertEqual(len(data['ra']), 7)
-        npt.assert_array_equal(data['id_group_sky'], np.arange(7))
-
+        data = read_lightcone(test_config, "group")
+        self.assertEqual(len(data["ra"]), 7)
+        npt.assert_array_equal(data["id_group_sky"], np.arange(7))
 
     def tearDown(self):
-        os.remove('test_example_00.hdf5')
-        os.remove('test_example_01.hdf5')
+        os.remove("test_example_00.hdf5")
+        os.remove("test_example_01.hdf5")
 
 
 class TestCombineFiltersAndData(unittest.TestCase):
@@ -182,16 +206,50 @@ class TestReadFilterNames(unittest.TestCase):
     """
 
     def setUp(self):
-        create_test_sed('test_sed_example_00.hdf5', 5, np.arange(5))
+        create_test_sed("test_sed_example_00.hdf5", 5, np.arange(5))
 
     def test_read(self):
         """
         Simple case where the filters are just read in.
         """
         data = read_filter_names(test_config)
-        correct_names = ['vista_k', 'sdss_j', 'wise_w1']
+        correct_names = ["vista_k", "sdss_j", "wise_w1"]
         for filter_name, correct_name in zip(data, correct_names):
             self.assertEqual(filter_name, correct_name)
+
+    def tearDown(self):
+        os.remove("test_sed_example_00.hdf5")
+
+
+class TestReadPhotometryData(unittest.TestCase):
+    """
+    Testing the read_photometry_data_hdf5 function.
+    """
+
+    def setUp(self):
+        # Create two sed files and we will combine them togther.
+        create_test_sed("test_sed_example_00.hdf5", 5, np.arange(5))
+        create_test_sed("test_sed_example_01.hdf5", 6, np.arange(6) + 5)
+
+    def test_read(self):
+        """
+        testing basic functionality.
+        """
+        ids, data = read_photometry_data_hdf5(test_config)
+        npt.assert_array_equal(ids, np.arange(11))
+        self.assertEqual(
+            len(data), 6
+        )  # number of filters times the number of groups (ap and ab)
+
+        total_ap_dust_vista = []
+        with h5py.File("test_sed_example_00.hdf5", "r") as file:
+            total_ap_dust_vista.append(file["SED/ap_dust/total"][1])
+        with h5py.File("test_sed_example_01.hdf5", "r") as file:
+            total_ap_dust_vista.append(file["SED/ap_dust/total"][1])
+
+        npt.assert_array_equal(
+            data["total_ap_dust_sdss_j"], np.concatenate(total_ap_dust_vista)
+        )
 
 
 class TestReadSpectra(unittest.TestCase):
