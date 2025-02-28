@@ -20,6 +20,24 @@ from read import (
     read_all_spectra,
 )
 
+def create_test_sed(file_name: str, number_galaxies: int, galaxy_ids: np.ndarray[int]) -> None:
+    """
+    Creates a test SED hdf5 which should mimic the shark ones.
+    """
+    sed_data = {
+        "ab_dust": np.random.uniform(-25, 15, number_galaxies),
+        "ap_dust": np.random.uniform(18, 21, number_galaxies)
+    }
+    filters = np.array([b'vista_k', b'sdss_j', b'wise_w1'])
+
+    with h5py.File(file_name, 'w') as file:
+        sed_group = file.create_group("SED")
+        for key, data in sed_data.items():
+            sed_group.create_dataset(key, data=data)
+
+        file.create_dataset("filters", data=filters)
+        file.create_dataset("id_galaxy_sky", data=galaxy_ids)
+
 
 def create_test_hdf5( file_name: str,
     ras: np.ndarray[float],
@@ -163,23 +181,17 @@ class TestReadFilterNames(unittest.TestCase):
     Testing the read_filter function
     """
 
-    @patch("h5py.File", autospec=True)
-    def test_read_filter_names(self, mock_h5py_file):
-        """Test that filter names are read and decoded correctly."""
+    def setUp(self):
+        create_test_sed('test_sed_example_00.hdf5', 5, np.arange(5))
 
-        # Define mock filter names as byte strings like the structure of the HDF5 file dataset
-        mock_filter_names = [b"u", b"g", b"r", b"i", b"z"]
-
-        # Create a mock for the HDF5 file structure with `filters` dataset
-        mock_file = MagicMock()
-        mock_file.__getitem__.return_value = (
-            mock_filter_names  # `f["filters"][:]` returns mock_filter_names
-        )
-        mock_h5py_file.return_value.__enter__.return_value = {"filters": mock_file}
-
-        result = read_filter_names(test_config)
-        expected_result = ["u", "g", "r", "i", "z"]
-        self.assertEqual(result, expected_result)
+    def test_read(self):
+        """
+        Simple case where the filters are just read in.
+        """
+        data = read_filter_names(test_config)
+        correct_names = ['vista_k', 'sdss_j', 'wise_w1']
+        for filter_name, correct_name in zip(data, correct_names):
+            self.assertEqual(filter_name, correct_name)
 
 
 class TestReadSpectra(unittest.TestCase):
