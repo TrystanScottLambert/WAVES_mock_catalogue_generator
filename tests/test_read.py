@@ -17,35 +17,83 @@ from read import (
     combine_filters_and_data,
     read_filter_names,
     read_spectra,
-    read_all_spectra
+    read_all_spectra,
 )
+
+
+def create_test_hdf5( file_name: str,
+    ras: np.ndarray[float],
+    decs: np.ndarray[float],
+    gal_ids: np.ndarray[int],
+    group_ids: np.ndarray[int],
+) -> None:
+    """
+    Builds an hdf5 file with galaxies which have ra, dec, id_galaxy_sky, and id_group_sky
+    """
+    galaxies_data = {
+        "ra": ras,
+        "dec": decs,
+        "id_galaxy_sky": gal_ids,
+    }
+    num_groups = len(group_ids)
+    groups_data = {
+        "ra": np.random.uniform(0, 360, num_groups),
+        "dec": np.random.uniform(-90, 90, num_groups),
+        "zobs": np.random.uniform(0, 1, num_groups),
+        "id_group_sky": group_ids,
+    }
+
+    with h5py.File(file_name, "w") as file:
+        # Create groups
+        galaxies_group = file.create_group("galaxies")
+        groups_group = file.create_group("groups")
+
+        # Add datasets to the 'galaxies' group
+        for key, data in galaxies_data.items():
+            galaxies_group.create_dataset(key, data=data)
+
+        # Add datasets to the 'groups' group
+        for key, data in groups_data.items():
+            groups_group.create_dataset(key, data=data)
 
 
 cat_details = CatalogueDetails(1, "g", 20, 0.6, "1.0")
 dirs = FileStrings(
-    lightcone_directory="light_dir",
-    sub_directory="sub_dir",
-    lightcone_file="light_file",
-    sed_file="sed_file",
+    lightcone_directory="./",
+    sub_directory="",
+    lightcone_file="test_example",
+    sed_file="test_sed_example",
     sub_volumes=np.array([0, 1]),
 )
 
 test_config = Config(
     FlatLambdaCDM(H0=70, Om0=0.3),
     cat_details,
-    {"galaxies": ["ra", "dec"]},
-    {"groups": ["ra", "dec"]},
+    {"galaxies": ["ra", "dec", "id_galaxy_sky"]},
+    {"groups": ["ra", "id_group_sky"]},
     ["ra", "dec", "angsep"],
     ["ra", "dec", "flag"],
     {"SED/ab_dust": ["total"]},
     dirs=dirs,
-    outfile_prefix='test_out',
+    outfile_prefix="test_out",
 )
+
 
 class TestReadLightCone(unittest.TestCase):
     """
     Testing the read_lightcone function.
     """
+
+    def setUp(self):
+        self.ras = np.random.uniform(0, 360, 5)
+        self.decs = np.random.uniform(-90, 90, 5)
+        gal_ids_0 = np.arange(5)
+        group_ids_0 = np.arange(4)
+        gal_ids_1 = np.arange(5) + len(gal_ids_0)
+        group_ids_1 = np.arange(3) + len(group_ids_0)
+        create_test_hdf5('test_example_00.hdf5', self.ras, self.decs, gal_ids_0, group_ids_0)
+        create_test_hdf5('test_example_01.hdf5', self.ras, self.decs, gal_ids_1, group_ids_1)
+
 
     def test_input_validation(self):
         """Tests that if the wrong source type is entered an error is raised."""
@@ -56,36 +104,33 @@ class TestReadLightCone(unittest.TestCase):
             'Type must be either "group" or "gal", not "not_correct_source_type"',
         )
 
-    @patch("h5py.File", autospec=True)
-    def test_read_lightcone(self, mock_h5py_file):
-        """Test reading data with correct input by focusing on mocking h5py.File."""
+    def test_read_lightcone_galaxies(self):
+        """
+        Testing on a mocked up hdf5 file the galaxy option in particular
+        """
+        data = read_lightcone(test_config, 'gal')
+        print(data)
+        npt.assert_array_equal(data['ra'], np.append(self.ras, self.ras))
+        npt.assert_array_equal(data['dec'], np.append(self.decs, self.decs))
+        npt.assert_array_equal(data['id_galaxy_sky'], np.arange(10))
 
-        # Mock data that should be returned by the HDF5 file structure
-        mock_data = {
-            "galaxies": {"ra": np.array([1.1, 1.2]), "dec": np.array([2.1, 2.2])}
-        }
+        correct_columns = ['ra', 'dec', 'id_galaxy_sky']
+        for correct_column, read_column in zip(correct_columns, data.keys()):
+            self.assertEqual(correct_column, read_column)
 
-        # Create a mock for the HDF5 file structure with dataset access
-        mock_file = {}
-        for group_name, datasets in mock_data.items():
-            mock_group = {}
-            for dataset_name, data in datasets.items():
-                dataset_mock = MagicMock()
-                dataset_mock.__getitem__.return_value = (
-                    data  # Return the array directly
-                )
-                mock_group[dataset_name] = dataset_mock
-            mock_file[group_name] = mock_group
+    def test_read_lightcone_groups(self):
+        """
+        Testing same functionality as above just on groups.
+        """
+        data = read_lightcone(test_config, 'group')
+        print('groups: ', data)
+        self.assertEqual(len(data['ra']), 7)
+        npt.assert_array_equal(data['id_group_sky'], np.arange(7))
 
-        # Set the return value of `h5py.File` context manager to this mock file structure
-        mock_h5py_file.return_value.__enter__.return_value = mock_file
 
-        # Update test_config to only include a single subvolume
-        test_config.dirs.sub_volumes = np.array([0])
-
-        result = read_lightcone(test_config, "gal")
-        expected_result = {"ra": np.array([1.1, 1.2]), "dec": np.array([2.1, 2.2])}
-        npt.assert_equal(result, expected_result)
+    def tearDown(self):
+        os.remove('test_example_00.hdf5')
+        os.remove('test_example_01.hdf5')
 
 
 class TestCombineFiltersAndData(unittest.TestCase):
@@ -141,6 +186,7 @@ class TestReadSpectra(unittest.TestCase):
     """
     Testing the reading of the spectra files (the spectra that get passed into prospect.)
     """
+
     def setUp(self):
         """
         Setting up a random hdf5 file which mimics the one on pawsey
@@ -166,7 +212,7 @@ class TestReadSpectra(unittest.TestCase):
         """
         table = read_spectra("test_spectra_1.hdf5")
         self.assertEqual(table.shape[0], 5)
-        self.assertEqual(table.shape[1], 11) # 10 + 1 including the id
+        self.assertEqual(table.shape[1], 11)  # 10 + 1 including the id
 
     def test_no_matches(self):
         """
@@ -178,14 +224,16 @@ class TestReadSpectra(unittest.TestCase):
 
     def test_matching(self):
         """
-        Testing that we can match the catalog to only read galaxies that 
+        Testing that we can match the catalog to only read galaxies that
         we want.
         """
-        good_list = np.arange(3, 7) # This isn't a subset of the ids.
-        good_list = np.append(good_list, np.array([1])) # just to have a non sequential value.
+        good_list = np.arange(3, 7)  # This isn't a subset of the ids.
+        good_list = np.append(
+            good_list, np.array([1])
+        )  # just to have a non sequential value.
         table = read_spectra("test_spectra_1.hdf5", match=True, match_ids=good_list)
 
-        npt.assert_array_equal(table[:,0], np.array([1, 3, 4, 5]))
+        npt.assert_array_equal(table[:, 0], np.array([1, 3, 4, 5]))
         self.assertEqual(table.shape[0], 4)
         self.assertEqual(table.shape[1], 11)
 
@@ -193,8 +241,8 @@ class TestReadSpectra(unittest.TestCase):
         """
         Testing reading all the spectra over multiple hdf5 files.
         """
-        directory = './'
-        file_stub = 'test_spectra_'
+        directory = "./"
+        file_stub = "test_spectra_"
         table = read_all_spectra(directory, file_stub)
         self.assertEqual(table.shape[0], 9)
         self.assertEqual(table.shape[1], 11)
@@ -204,8 +252,8 @@ class TestReadSpectra(unittest.TestCase):
         """
         Testing the case where we have only some galaxies in hdf5 that we want to match to.
         """
-        directory = './'
-        file_stub = 'test_spectra_'
+        directory = "./"
+        file_stub = "test_spectra_"
         good_list = np.array([2, 4, 11, 31, 102])
         table = read_all_spectra(directory, file_stub, matching_ids=good_list)
         self.assertEqual(table.shape[0], 4)
@@ -216,17 +264,18 @@ class TestReadSpectra(unittest.TestCase):
         """
         Testing the case where one of the files has no overlap with matching ids.
         """
-        directory = './'
-        file_stub = 'test_spectra_'
-        good_list = np.array([2, 4, 102]) # no ids from test_spectra_2
+        directory = "./"
+        file_stub = "test_spectra_"
+        good_list = np.array([2, 4, 102])  # no ids from test_spectra_2
         table = read_all_spectra(directory, file_stub, good_list)
         self.assertEqual(table.shape[0], 2)
         self.assertEqual(table.shape[1], 11)
         npt.assert_array_equal(table[:, 0], np.array([2, 4]))
 
     def tearDown(self):
-        os.remove('test_spectra_1.hdf5')
-        os.remove('test_spectra_2.hdf5')
+        os.remove("test_spectra_1.hdf5")
+        os.remove("test_spectra_2.hdf5")
+
 
 if __name__ == "__main__":
     unittest.main()
