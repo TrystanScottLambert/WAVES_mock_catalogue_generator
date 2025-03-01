@@ -164,8 +164,8 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_read_properties function
         """
         # reading in correctly.
-        real_gal_dict = {'galaxies': ('ra', 'dec')}
-        real_group_dict = {'groups': ('id_group_sky', 'zobs')}
+        real_gal_dict = {'galaxies': tuple(list(set(['dec', 'ra'])))} # alphabetical
+        real_group_dict = {'groups': tuple(list(set(['id_group_sky', 'zobs'])))}
         val_groups, val_gals = load_read_properties(self.settings)
         self.assertIsInstance(val_groups, dict)
         self.assertIsInstance(val_gals, dict)
@@ -186,8 +186,8 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_write_properties
         """
         group_val, gal_val = load_write_properties(self.settings)
-        gal_correct = ['id_galaxy_sky', 'ra', 'dec']
-        group_correct = ['unique_group_id', 'flag']
+        gal_correct = list(set(['ra','dec', 'id_galaxy_sky']))
+        group_correct = list(set(['unique_group_id', 'flag']))
         self.assertEqual(group_val, group_correct)
         self.assertEqual(gal_val, gal_correct)
 
