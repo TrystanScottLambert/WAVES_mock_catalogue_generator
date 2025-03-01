@@ -47,6 +47,38 @@ class TestCaclulatedTable(unittest.TestCase):
         actual = self.cosmo.luminosity_distance(np.arange(1000))
         npt.assert_array_equal(read_cosmo, actual)
 
+    def test_list_columns(self):
+        """
+        Testing the list columns method.
+        """
+        correct = ['dec', 'ra'] # alphabetical order
+        self.assertListEqual(correct, self.test_table.list_columns())
+
+    def test_get_column(self):
+        """
+        Testing the get column method.
+        """
+        correct_data = self.scrapped_dict['ra']
+        self.assertEqual(type(self.test_table.get_column('ra')), DataDescription)
+        npt.assert_array_equal(correct_data, self.test_table.get_column('ra').data)
+        self.assertEqual('This is the ra.', self.test_table.get_column('ra').description)
+        self.assertEqual('ra', self.test_table.get_column('ra').column_name)
+
+    def sample(self):
+        """
+        Testing the sample method.
+        """
+        # if we pass the scrapped dict that's what we'll get as the writeable dict.
+        correct_header_dict = {'ra': 'This is the ra.', 'dec': 'This is the dec.'}
+        head_dict, write_dict = self.test_table.sample(['dec', 'ra']) # doesn't matter the order.
+        for key, item in head_dict.items():
+            self.assertEqual(correct_header_dict[key], item)
+
+        for key, item in write_dict.items():
+            self.assertEqual(self.scrapped_dict[key], item)
+
+
+
 
 class TestGalaxyTable(unittest.TestCase):
     """
@@ -67,7 +99,7 @@ class TestGalaxyTable(unittest.TestCase):
 
     def test_props_readin(self):
         """
-        Testing that the calcualted properties are generated but also the read in properties.
+        Testing that the properties that are read in.
         """
         self.assertEqual(type(self.test_table.mstars_bulge), DataDescription)
         self.assertEqual(type(self.test_table.mstars_disk), DataDescription)
@@ -97,7 +129,24 @@ class TestGalaxyTable(unittest.TestCase):
             self.test_table.log_mstar_total.description,
             "The total stellar mass of the system.",
         )
+    
+    def test_sample(self):
+        """
+        Testing that adding the calculated properties doesn't mess up the sampling.
+        """
+        correct_header = {'mstars_bulge': "This is bulge.", "log_mstar_total": "The total stellar mass of the system."}
+        correct_data = np.log10(
+            (self.scrapped_dict["mstars_bulge"] + self.scrapped_dict["mstars_disk"])
+            / self.cosmo.h
+        )
+        correct_write = {'mstars_bulge': self.scrapped_dict['mstars_bulge'], 'log_mstar_total': correct_data}
 
+        head_dict, write_dict = self.test_table.sample(['log_mstar_total', 'mstars_bulge'])
+        for key, item in head_dict.items():
+            self.assertEqual(correct_header[key], item)
+        
+        for key, item in write_dict.items():
+            npt.assert_array_equal(correct_write[key], item)
 
 if __name__ == "__main__":
     unittest.main()
