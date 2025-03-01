@@ -47,8 +47,8 @@ class Config:
         """
         Create the outfile names post init
         """
-        self.galaxy_outfile_name = f'{self.outfile_prefix}_gals.parquet'
-        self.group_outfile_name = f'{self.outfile_prefix}_groups.parquet'
+        self.galaxy_outfile_name = f"{self.outfile_prefix}_gals.parquet"
+        self.group_outfile_name = f"{self.outfile_prefix}_groups.parquet"
 
     def dump_directory(self, file_type: str) -> tuple[str, str, str]:
         """
@@ -94,15 +94,24 @@ def load_cat_details(input_params: dict) -> CatalogueDetails:
     return cat_details
 
 
+def remove_duplicates_in_list(possibly_duplicated_list: list) -> list:
+    """
+    Removes duplicated values in a list but preserves the order. 
+    """
+    return list(dict.fromkeys(possibly_duplicated_list))
+
+
 def load_read_properties(input_parameters: dict) -> tuple[dict]:
     """
     Reads in the properties that need to read in galaxy and groups.
     """
+
     group_fields = {
-        "groups": tuple(input_parameters["Properties_To_Read_In"]["groups"])
+        "groups": tuple(remove_duplicates_in_list(input_parameters["Properties_To_Read_In"]["groups"]))
     }
     galaxy_fields = {
-        "galaxies": tuple(input_parameters["Properties_To_Read_In"]["galaxies"])
+        "galaxies": tuple(
+            remove_duplicates_in_list(input_parameters["Properties_To_Read_In"]["galaxies"]))
     }
 
     # Checking that these fields actually even exist in the first place.
@@ -116,6 +125,21 @@ def load_read_properties(input_parameters: dict) -> tuple[dict]:
         raise AttributeError(
             f"{len(bad_group_fields)} bad group field(s) and {len(bad_galaxy_fields)} bad galaxy field(s) found. \nBad group fields: {bad_group_fields} \nBad galaxy fields: {bad_galaxy_fields}"
         )
+
+    # warn user if multiple values are found in the config
+    if len(set(input_parameters["Properties_To_Read_In"]["groups"])) != len(
+        input_parameters["Properties_To_Read_In"]["groups"]
+    ):
+        warnings.warn(
+            "Repeated values in the config file for group properties to read in. Value will be read in only once. Consider editing config."
+        )
+    if len(set(input_parameters["Properties_To_Read_In"]["galaxies"])) != len(
+        input_parameters["Properties_To_Read_In"]["galaxies"]
+    ):
+        warnings.warn(
+            "Repeated values in the config file for galaxy properties to read in. Value will be read in only once. Consider editing config."
+        )
+
     return group_fields, galaxy_fields
 
 
@@ -125,9 +149,22 @@ def load_write_properties(input_parameters: dict) -> tuple[list]:
     """
     # We need to check that we can even make these properties. This is so far down the line
     # that its important to do. Recommend creating Write_Properties_YAML straight from the
-    # Tbale data classes
-    group_props = input_parameters["Properties_To_Write"]["groups"]
-    gal_props = input_parameters["Properties_To_Write"]["galaxies"]
+    group_props = remove_duplicates_in_list(input_parameters["Properties_To_Write"]["groups"])
+    gal_props = remove_duplicates_in_list(input_parameters["Properties_To_Write"]["galaxies"])
+
+    # warn if multiple values are found
+    if len(set(input_parameters["Properties_To_Write"]["groups"])) != len(
+        input_parameters["Properties_To_Read_In"]["groups"]
+    ):
+        warnings.warn(
+            "Repeated values in the config file for group properties to write. Value will be read in only once. Consider editing config."
+        )
+    if len(set(input_parameters["Properties_To_Write"]["groups"])) != len(
+        input_parameters["Properties_To_Read_In"]["groups"]
+    ):
+        warnings.warn(
+            "Repeated values in the config file for group properties to write. Value will be read in only once. Consider editing config."
+        )
     return group_props, gal_props
 
 
@@ -231,9 +268,7 @@ def load_all() -> Config:
     )  # checks that all the settings are there in the first place.
     cosmo = load_cosmo(settings)  # checks cosmology is correct.
     file_strings = load_directory_string(settings)  # checks files actually exist.
-    group_read_props, gal_read_props = load_read_properties(
-        settings
-    )  # checks properties are there.
+    group_read_props, gal_read_props = load_read_properties(settings)
     group_write_props, gal_write_props = load_write_properties(settings)
     cat_details = load_cat_details(settings)
 
@@ -246,5 +281,5 @@ def load_all() -> Config:
         group_props_write=group_write_props,
         sed_fields=settings["SED_fields"],
         dirs=file_strings,
-        outfile_prefix=settings['Outfile_Prefix']
+        outfile_prefix=settings["Outfile_Prefix"],
     )

@@ -21,6 +21,7 @@ from load import (
     load_directory_string,
     validate_input_file,
     load_all,
+    remove_duplicates_in_list,
     Config,
     FileStrings
 )
@@ -164,7 +165,7 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_read_properties function
         """
         # reading in correctly.
-        real_gal_dict = {'galaxies': ('ra', 'dec')}
+        real_gal_dict = {'galaxies': ('ra', 'dec')} # alphabetical
         real_group_dict = {'groups': ('id_group_sky', 'zobs')}
         val_groups, val_gals = load_read_properties(self.settings)
         self.assertIsInstance(val_groups, dict)
@@ -186,7 +187,7 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_write_properties
         """
         group_val, gal_val = load_write_properties(self.settings)
-        gal_correct = ['id_galaxy_sky', 'ra', 'dec']
+        gal_correct = ['id_galaxy_sky', 'ra','dec']
         group_correct = ['unique_group_id', 'flag']
         self.assertEqual(group_val, group_correct)
         self.assertEqual(gal_val, gal_correct)
@@ -424,6 +425,27 @@ class TestLoadAllFunction(unittest.TestCase):
         self.assertEqual(config.dirs.lightcone_file, "lightcone_file")
         self.assertListEqual(config.dirs.sub_volumes, [0, 1, 2])
 
+
+class TestRemoveDuplicatedList(unittest.TestCase):
+    """
+    Testing the _remove_duplicates_in_list function.
+    """
+
+    def test_list_no_dupes(self):
+        """
+        Testing when the list doesn't have any duplicate values.
+        """
+        test_list = [5, 6, 7, 8, 1, 3]
+        val_list = remove_duplicates_in_list(test_list)
+        self.assertListEqual(val_list, test_list)
+
+    def test_list_with_dupes(self):
+        """
+        Testing that list works with duplicated values.
+        """
+        test_list = [5, 6, 6, 7, 1, 2, 3, 2]
+        val_list = remove_duplicates_in_list(test_list)
+        self.assertListEqual(val_list, [5, 6, 7, 1, 2, 3])
 
 if __name__ == "__main__":
     unittest.main()

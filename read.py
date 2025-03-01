@@ -4,10 +4,10 @@ General functions used for building the WAVES mock catalogue.
 
 from collections import defaultdict
 import warnings
+import glob
 
 import h5py
 import numpy as np
-import glob
 
 from load import Config
 
@@ -66,7 +66,13 @@ def read_all_spectra(
 
 
 def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
-    """Read the mock file for the given model/subvolume as efficiently as possible."""
+    """
+    Reads in the mock data using the group/gal to read values in the config file.
+    loops over all subvolumes stored in the config file and adds the columns of the selected
+    data together into numpy arrays. This is then returned as a dictionary where every key is 
+    the column that needs to be read in and value is the concatenation of all the data across
+    all the subvolumes.
+    """
 
     if source_type == "gal":
         fields = config.gal_props_read
@@ -137,7 +143,7 @@ def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, dict]:
                     full_data_path = f"{group_name}/{data_name}"
                     data[full_data_path].append(group[data_name][()])
 
-    ids = np.concatenate(ids, axis=0)
+    ids = np.concatenate(ids)
     for key in data:
         data[key] = np.concatenate(data[key], axis=1)
 

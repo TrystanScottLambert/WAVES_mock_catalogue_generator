@@ -46,9 +46,9 @@ class CalculatedTable:
             if isinstance(getattr(self, name), DataDescription)
         ]
 
-    def get_column(self, column_name: str) -> np.ndarray:
+    def get_column(self, column_name: str) -> DataDescription:
         """
-        Retrieves the data for the given column name.
+        Retrieves the DataDescription for the given column name.
         """
         return getattr(self, column_name)
 
