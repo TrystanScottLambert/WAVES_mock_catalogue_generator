@@ -79,9 +79,7 @@ def write_to_parquet(
 
     # create the meta_data
     pa_list = [pa.field(key, pa.array(value).type) for key, value in final_dict.items()]
-    meta_data = (
-        unit_header | cat_details.to_dict()
-    )  # adding the cat details as a dictionary
+    meta_data = (unit_header | cat_details.to_dict())
     pa_schema = pa.schema(pa_list, metadata=meta_data)
 
     # Add together and write to parquet
