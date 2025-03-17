@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 from astropy.cosmology import FlatLambdaCDM
+from scipy import interpolate
+from scipy.stats import truncnorm
 
 
 @dataclass
@@ -125,6 +127,75 @@ class GalaxyTable(CalculatedTable):
         value = self.mstars_bulge.data / (
             self.mstars_bulge.data + self.mstars_disk.data
         )
+        return DataDescription(column_name, description, value)
+
+    @property
+    def bulge_axis_ratio(self) -> DataDescription:
+        """
+        In Shark, bulges are perfectly spherical, so we sample their axis ratios from 
+        https://ui.adsabs.harvard.edu/link_gateway/2023A&A...671A.102E/doi:10.1051/0004-6361/202245042
+        """
+        column_name = "bulge_axis_ratio"
+        description = "Bulge axis ratio"
+        loc_bulge, scale_bulge, clip_a_bulge, clip_b_bulge = 0.7, 0.3, 0., 1.
+        a_bulge, b_bulge = (clip_a_bulge - loc_bulge) / scale_bulge, (clip_b_bulge - loc_bulge) / scale_bulge
+        value = truncnorm.rvs(a_bulge, b_bulge, loc=loc_bulge, scale=scale_bulge, size=len(self.mstars_bulge.data))
+        return DataDescription(column_name, description, value)
+
+    @property
+    def disk_axis_ratio(self) -> DataDescription:
+        """
+        Disk axis ratios are approximated by considering the half mass radii as the projected major axes, while the projected minor axes are
+        computed with the equation in section 2.2 of Lagos+19 (depends on disk radius and inclination).
+        https://ui.adsabs.harvard.edu/link_gateway/2019MNRAS.489.4196L/doi:10.1093/mnras/stz2427
+        The value 7.3 comes from the scale height-to-scale length observed relation in local galaxy discs (Kregel, van der Kruit & de Grijs 2002).
+        The formula assumes sizes in comoving kpc, while the Shark quantities are in comoving Mpc (hence the 10^3 factor).
+        """
+        column_name = "disk_axis_ratio"
+        description = "Disk axis ratio"
+        value = np.sin(self.inclination.data*np.pi/180) * ((self.rstar_disk_intrinsic.data*10**3/self.cosmo.h) - (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3) + (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3
+        return DataDescription(column_name, description, value)
+
+    def bulge_half_light_radius(self, key='half-mass') -> DataDescription:
+        """
+        This function computes the half-light radius of the bulge from its intrinsic half-mass radius.
+        If key = 'half-mass', then we assume the two to be the same.
+        If key = 'Suess+19', then we assume the relation in Suess+19 between half-light and half-mass radius.
+        Suess+19 compares the two quantities in kpc. The ratio evolves with redshift, being one beyond z=2.2.
+        """
+        column_name = "bulge_r50"
+        description = "Bulge half-light radius"
+        if key == 'half-mass':
+            value = self.rstar_bulge_intrinsic.data
+        elif key == 'Suess+19':
+            z_values=np.array([0.25, 0.75, 1.25, 1.75, 2.25])
+            ratio_half_light_half_mass_suess19 = np.array([4/3, 2.8/1.9, 1.8/1.4, 1.6/1.3, 1.])
+            f_interp = interpolate.interp1d(z_values, ratio_half_light_half_mass_suess19, kind='linear', fill_value=(ratio_half_light_half_mass_suess19[0],ratio_half_light_half_mass_suess19[-1]), bounds_error=False)
+            ratio_half_light_half_mass = f_interp(self.zobs.data)
+            value = self.rstar_bulge_intrinsic.data * ratio_half_light_half_mass
+        else:
+            raise KeyError
+        return DataDescription(column_name, description, value)
+
+    def disk_half_light_radius(self, key='half-mass') -> DataDescription:
+        """
+        This function computes the half-light radius of the disk from its intrinsic half-mass radius.
+        If key = 'half-mass', then we assume the two to be the same.
+        If key = 'Suess+19', then we assume the relation in Suess+19 between half-light and half-mass radius.
+        Suess+19 compares the two quantities in kpc. The ratio evolves with redshift, being roughly one beyond z=2.2.
+        """
+        column_name = "disk_r50"
+        description = "Disk half-light radius"
+        if key == 'half-mass':
+            value = self.rstar_disk_intrinsic.data
+        elif key == 'Suess+19':
+            z_values=np.array([0.25, 0.75, 1.25, 1.75, 2.25])
+            ratio_half_light_half_mass_suess19 = np.array([6/4, 5/3.3, 4.3/2.9, 3.8/3, 3.1/2.9])
+            f_interp = interpolate.interp1d(z_values, ratio_half_light_half_mass_suess19, kind='linear', fill_value=(ratio_half_light_half_mass_suess19[0],ratio_half_light_half_mass_suess19[-1]), bounds_error=False)
+            ratio_half_light_half_mass = f_interp(self.zobs.data)
+            value = self.rstar_disk_intrinsic.data * ratio_half_light_half_mass
+        else:
+            raise KeyError
         return DataDescription(column_name, description, value)
 
 class GroupTable(CalculatedTable):
