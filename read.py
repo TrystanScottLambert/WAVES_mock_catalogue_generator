@@ -84,7 +84,7 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     data = defaultdict(list)
     for sub_volume in config.dirs.sub_volumes:
         full_name = config.print_full_file_name("mock", sub_volume)
-        print(f"Reading galaxies data from: {full_name}")
+        print(f"Reading data from: {full_name}")
         with h5py.File(full_name, "r") as f:
             for group_name, data_names in fields.items():
                 group = f[group_name]
@@ -132,7 +132,7 @@ def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, dict]:
 
     for sub_volume in config.dirs.sub_volumes:
         full_name = config.print_full_file_name("sed", sub_volume)
-        print(f"Reading galaxies data from {full_name}")
+        print(f"Reading data from: {full_name}")
 
         with h5py.File(full_name, "r") as file:
             ids.append(file["id_galaxy_sky"][()])
