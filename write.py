@@ -6,7 +6,6 @@ from typing import TextIO
 from dataclasses import dataclass
 
 import numpy as np
-import pandas as pd
 import polars as pl
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -98,6 +97,6 @@ def write_spectra_table_to_parquet(
     Writes a 2D numpy array that represents the spectra table to a parquet.
     The first column is assumed to be 'id_galaxy_sky', and the remaining columns are spectra values.
     """
-    
-    df = pd.DataFrame(data, columns=["id_galaxy_sky"] + wavelength.astype(str).tolist())
-    df.to_parquet(outfile, index=False)
+
+    df = pl.DataFrame(data, schema=["id_galaxy_sky"] + wavelength.astype(str).tolist())
+    df.write_parquet(outfile, index=False)
