@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+import polars as pl
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -70,23 +71,24 @@ def write_to_parquet(
     """
     # Combine the dictionaries
     final_dict = {
-        key: value
+        key: pl.Series(values=value)
         for dictionary in writeable_dicts
         for key, value in dictionary.items()
     }
     # Create the data frame:
-    df = pd.DataFrame.from_dict(final_dict)
+    df = pl.from_dict(final_dict)
+    df.write_parquet(outfile)
 
     # create the meta_data
-    pa_list = [pa.field(key, pa.array(value).type) for key, value in final_dict.items()]
-    meta_data = (
-        unit_header | cat_details.to_dict()
-    )  # adding the cat details as a dictionary
-    pa_schema = pa.schema(pa_list, metadata=meta_data)
+    #pa_list = [pa.field(key, pa.array(value).type) for key, value in final_dict.items()]
+    #meta_data = (
+    #    unit_header | cat_details.to_dict()
+    #)  # adding the cat details as a dictionary
+    #pa_schema = pa.schema(pa_list, metadata=meta_data)
 
     # Add together and write to parquet
-    table = pa.Table.from_pandas(df, pa_schema)
-    pq.write_table(table, outfile)
+    #table = pa.Table.from_pandas(df, pa_schema)
+    #pq.write_table(table, outfile)
 
 
 def write_spectra_table_to_parquet(
