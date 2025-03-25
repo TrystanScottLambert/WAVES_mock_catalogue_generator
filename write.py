@@ -99,4 +99,4 @@ def write_spectra_table_to_parquet(
     """
 
     df = pl.DataFrame(data, schema=["id_galaxy_sky"] + wavelength.astype(str).tolist())
-    df.write_parquet(outfile, index=False)
+    df.write_parquet(outfile)
