@@ -98,5 +98,6 @@ def write_spectra_table_to_parquet(
     Writes a 2D numpy array that represents the spectra table to a parquet.
     The first column is assumed to be 'id_galaxy_sky', and the remaining columns are spectra values.
     """
+    
     df = pd.DataFrame(data, columns=["id_galaxy_sky"] + wavelength.astype(str).tolist())
     df.to_parquet(outfile, index=False)
