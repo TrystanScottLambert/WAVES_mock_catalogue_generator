@@ -75,6 +75,8 @@ def write_to_parquet(
         for key, value in dictionary.items()
     }
     # Create the data frame:
+    for key, value in final_dict.items():
+        print(key, len(value))
     df = pd.DataFrame.from_dict(final_dict)
 
     # create the meta_data

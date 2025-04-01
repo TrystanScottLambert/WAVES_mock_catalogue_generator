@@ -72,6 +72,7 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
         fields = config.gal_props_read
     elif source_type == "group":
         fields = config.group_props_read
+        print('fields: ', fields)
     else:
         raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
 

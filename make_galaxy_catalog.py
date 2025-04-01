@@ -21,6 +21,8 @@ def main():
     # Reading the data from the hdf5 files
     galaxy_data = read_lightcone(config, "gal")
     group_data = read_lightcone(config, "group")
+    for key, value in group_data.items():
+        print('group data: ', key, len(value))
     _, sed_data = read_photometry_data_hdf5(config)
 
     # filtering the data
