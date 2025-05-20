@@ -13,7 +13,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from write import stamp_preamble, CatalogueDetails, write_spectra_table_to_parquet
+from write import stamp_preamble, CatalogueDetails, write_spectra_table_to_parquet, write_to_parquet
 
 
 HEADER_PREAMBLE_DIR = "header_preamble/header_preamble_v1.head"
@@ -82,6 +82,7 @@ class TestWritingSpectra(unittest.TestCase):
     """
     Testing the write functionailty of the spectra files.
     """
+
     def test_write(self):
         """
         creating a fake 2d array with values and ensureing it's written.
@@ -90,15 +91,48 @@ class TestWritingSpectra(unittest.TestCase):
         ids = np.array([0, 1, 2, 3]).reshape(4, 1)
         data = np.random.rand(4, 10)
         table = np.hstack((ids, data))
-        correct_column_headers = np.append(np.array(["id_galaxy_sky"]), np.arange(11, 21).astype(int).astype(str))
-        write_spectra_table_to_parquet(table, wavelength, 'test.parquet')
-        test_df = pd.read_parquet('test.parquet', engine='pyarrow')
-        df_ids = np.array(test_df['id_galaxy_sky'])
+        correct_column_headers = np.append(
+            np.array(["id_galaxy_sky"]), np.arange(11, 21).astype(int).astype(str)
+        )
+        write_spectra_table_to_parquet(table, wavelength, "test.parquet")
+        test_df = pd.read_parquet("test.parquet", engine="pyarrow")
+        df_ids = np.array(test_df["id_galaxy_sky"])
         npt.assert_array_equal(df_ids, np.array([0, 1, 2, 3]))
         self.assertEqual(len(test_df), 4)
         npt.assert_array_equal(np.array(test_df.columns), correct_column_headers)
-        npt.assert_array_equal(np.array(test_df['id_galaxy_sky']), ids.reshape(4))
-        os.remove('test.parquet')
+        npt.assert_array_equal(np.array(test_df["id_galaxy_sky"]), ids.reshape(4))
+        os.remove("test.parquet")
+
+class TestWriteToParquet(unittest.TestCase):
+    """
+    Testing the write_to_parquet function.
+    """
+
+    gal_dict = {'ra': np.random.random(10), 'dec': np.random.random(10), 'z': np.random.random(10)}
+    sed_dict = {'b_ab_dust': np.random.random(10), 'b_ap_dust': np.random.random(10)}
+
+    write_dicts = [gal_dict, sed_dict]
+    unit_header = {'ra': 'This is RA', 'dec': 'This is Dec', 'z': 'This is Redshift'}
+    cat_details = CatalogueDetails(1, "g", 20, 0.6, "1.0")
+
+    outfile = 'test_write.parquet'
+
+    def test_write(self):
+        """
+        Testing that the writing process does not scramble things.
+        """
+        # write the parquet file and we will read it back in and see that it is correct.
+        write_to_parquet(self.write_dicts, self.unit_header, self.cat_details, self.outfile)
+
+        test_df = pd.read_parquet(self.outfile)
+        npt.assert_array_equal(np.array(test_df['ra']), self.gal_dict['ra'])
+        npt.assert_array_equal(np.array(test_df['dec']), self.gal_dict['dec'])
+        npt.assert_array_equal(np.array(test_df['z']), self.gal_dict['z'])
+        npt.assert_array_equal(np.array(test_df['b_ab_dust']), self.sed_dict['b_ab_dust'])
+        npt.assert_array_equal(np.array(test_df['b_ap_dust']), self.sed_dict['b_ap_dust'])
+
+    def tearDown(self):
+        os.remove(self.outfile)
 
 
 if __name__ == "__main__":
