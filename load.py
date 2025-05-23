@@ -256,11 +256,11 @@ def validate_input_file(input_parameters: dict) -> None:
         )
 
 
-def load_all() -> Config:
+def load_all(config_filename: str = 'config.yml') -> Config:
     """
     Main function which loads all the settings and returns the 'Config' class.
     """
-    with open("config.yml", encoding="utf-8") as file:
+    with open(config_filename, encoding="utf-8") as file:
         settings = yaml.safe_load(file)
 
     validate_input_file(
