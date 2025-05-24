@@ -263,9 +263,7 @@ def load_all(config_filename: str = 'config.yml') -> Config:
     with open(config_filename, encoding="utf-8") as file:
         settings = yaml.safe_load(file)
 
-    validate_input_file(
-        settings
-    )  # checks that all the settings are there in the first place.
+    validate_input_file(settings)  # checks that all the settings are there in the first place.
     cosmo = load_cosmo(settings)  # checks cosmology is correct.
     file_strings = load_directory_string(settings)  # checks files actually exist.
     group_read_props, gal_read_props = load_read_properties(settings)

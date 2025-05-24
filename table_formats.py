@@ -156,6 +156,7 @@ class GalaxyTable(CalculatedTable):
         value = np.sin(self.inclination.data*np.pi/180) * ((self.rstar_disk_intrinsic.data*10**3/self.cosmo.h) - (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3) + (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3
         return DataDescription(column_name, description, value)
 
+    @property
     def bulge_half_light_radius(self, key='half-mass') -> DataDescription:
         """
         This function computes the half-light radius of the bulge from its intrinsic half-mass radius.
@@ -177,6 +178,7 @@ class GalaxyTable(CalculatedTable):
             raise KeyError
         return DataDescription(column_name, description, value)
 
+    @property
     def disk_half_light_radius(self, key='half-mass') -> DataDescription:
         """
         This function computes the half-light radius of the disk from its intrinsic half-mass radius.
