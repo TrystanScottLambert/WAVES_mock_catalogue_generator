@@ -63,12 +63,18 @@ class Config:
             raise ValueError(f'file_type must be "sed" or "mock" not "{file_type}"')
         return self.dirs.lightcone_directory, self.dirs.sub_directory, file_name
 
-    def print_full_file_name(self, file_type: str, sub_volume: int) -> str:
+    def print_full_file_name(self, file_type: str, sub_volume: int, mock_or_sed: str = 'mock') -> str:
         """
         Returns the full path name for the given file type and sub_volume
         """
         parent_dir, sub_dir, file_name = self.dump_directory(file_type)
-        return os.path.join(parent_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5")
+        if mock_or_sed == 'sed':
+            val = os.path.join(parent_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5")
+        elif mock_or_sed == 'mock':
+            val = os.path.join(parent_dir, sub_dir, f"{file_name}.{sub_volume}.hdf5")
+        else:
+            raise NameError("mock_or_sed needs to be 'mock' or 'sed'")
+        return val
 
 
 def load_cosmo(input_params: dict) -> FlatLambdaCDM:
