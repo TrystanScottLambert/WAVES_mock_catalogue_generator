@@ -16,7 +16,10 @@ def filter_based_on_mag(config_object: Config, sed_data: dict, galaxy_data: dict
     """
     mag_filter = config_object.cat_details.mag_filter
     mag_limit = config_object.cat_details.mag_cut
-    cut_idxs = np.where(sed_data[mag_filter] < mag_limit)[0]
+    cut_sed_idxs = np.where(sed_data[mag_filter] < mag_limit)[0]
+    cut_gal_idxs = np.where(galaxy_data['zobs'] < config_object.cat_details.redshift_cut)[0]
+    cut_idxs = np.intersect1d(cut_sed_idxs, cut_gal_idxs)
+
     cut_sed_data = {key: value[cut_idxs] for key, value in sed_data.items()}
     cut_galaxy_data = {key: value[cut_idxs] for key, value in galaxy_data.items()}
     return cut_sed_data, cut_galaxy_data

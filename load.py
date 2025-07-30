@@ -63,7 +63,7 @@ class Config:
             raise ValueError(f'file_type must be "sed" or "mock" not "{file_type}"')
         return self.dirs.lightcone_directory, self.dirs.sub_directory, file_name
 
-    def print_full_file_name(self, file_type: str, sub_volume: int, mock_or_sed: str = 'mock') -> str:
+    def print_full_file_name(self, file_type: str, sub_volume: int, mock_or_sed: str) -> str:
         """
         Returns the full path name for the given file type and sub_volume
         """
@@ -215,7 +215,7 @@ def load_directory_string(input_parameters: dict) -> FileStrings:
         os.path.join(
             file_strings.lightcone_directory,
             file_strings.sub_directory,
-            f"{file_strings.lightcone_file}_{sub_volume:02d}.hdf5",
+            f"{file_strings.lightcone_file}.{sub_volume}.hdf5",
         )
         for sub_volume in sub_volumes
     ]

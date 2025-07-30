@@ -125,8 +125,8 @@ class TestConfig(unittest.TestCase):
         """
         Testing the print full file name method in the Config class
         """
-        val = self.test_config_class.print_full_file_name('mock', 0)
-        required = os.path.join('light_dir', 'sub_dir', 'light_file_00.hdf5')
+        val = self.test_config_class.print_full_file_name('mock', 0, mock_or_sed='mock')
+        required = os.path.join('light_dir', 'sub_dir', 'light_file.0.hdf5')
         self.assertEqual(val, required)
 
 

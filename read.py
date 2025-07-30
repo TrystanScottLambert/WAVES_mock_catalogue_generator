@@ -101,7 +101,7 @@ def read_filter_names(config: Config) -> list[str]:
     """
     Returns a list of the filter names for the given sed file.
     """
-    full_name = config.print_full_file_name("sed", 0)
+    full_name = config.print_full_file_name("sed", 0, mock_or_sed='sed')
     with h5py.File(full_name, "r") as f:
         filter_names = f["filters"][:]
         filter_names = [filter_name.decode() for filter_name in filter_names]
