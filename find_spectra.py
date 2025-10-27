@@ -28,8 +28,6 @@ def main(mock_cat: str, directory: str, filestub: str, outfile: str) -> None:
     spectra = read_all_spectra(directory, filestub, galaxy_ids)
     write_spectra_table_to_parquet(spectra, wavelengths, outfile)
 
+
 if __name__ == "__main__":
-    main(mock_cat=,
-         directory=,
-         filestub=,
-         outfile=)
+    pass

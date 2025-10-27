@@ -10,19 +10,25 @@ from write import write_to_parquet
 from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
 from table_formats import GalaxyTable, GroupTable
 
-def filter_based_on_mag(config_object: Config, sed_data: dict, galaxy_data: dict) -> dict:
+
+def filter_based_on_mag(
+    config_object: Config, sed_data: dict, galaxy_data: dict
+) -> dict:
     """
     Based on the magnitude limit stored in the config_object we filter the galaxy and sed data.
     """
     mag_filter = config_object.cat_details.mag_filter
     mag_limit = config_object.cat_details.mag_cut
     cut_sed_idxs = np.where(sed_data[mag_filter] < mag_limit)[0]
-    cut_gal_idxs = np.where(galaxy_data['zobs'] < config_object.cat_details.redshift_cut)[0]
+    cut_gal_idxs = np.where(
+        galaxy_data["zobs"] < config_object.cat_details.redshift_cut
+    )[0]
     cut_idxs = np.intersect1d(cut_sed_idxs, cut_gal_idxs)
 
     cut_sed_data = {key: value[cut_idxs] for key, value in sed_data.items()}
     cut_galaxy_data = {key: value[cut_idxs] for key, value in galaxy_data.items()}
     return cut_sed_data, cut_galaxy_data
+
 
 def main():
     """
@@ -55,7 +61,10 @@ def main():
         config.galaxy_outfile_name,
     )
     write_to_parquet(
-        [group_data_to_write], group_header, config.cat_details, config.group_outfile_name
+        [group_data_to_write],
+        group_header,
+        config.cat_details,
+        config.group_outfile_name,
     )
 
 

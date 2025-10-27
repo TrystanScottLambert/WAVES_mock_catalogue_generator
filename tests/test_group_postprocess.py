@@ -2,16 +2,12 @@
 Unit tests for the group post-processing module.
 """
 
-from pathlib import Path
-import tempfile
 import unittest
 import astropy.units as u
 import numpy as np
-import polars as pl
 
 
 from group_post_process import calc_rvir_from_mvir, Group, join_groups
-import group_post_process
 
 
 class TestMvir(unittest.TestCase):

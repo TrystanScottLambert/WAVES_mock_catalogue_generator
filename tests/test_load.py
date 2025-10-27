@@ -23,25 +23,30 @@ from load import (
     load_all,
     remove_duplicates_in_list,
     Config,
-    FileStrings
+    FileStrings,
 )
+
 
 class TestFileString(unittest.TestCase):
     """
     Testing the FileStrings class. Simple data class that only requires testing reading.
     """
+
     def test_read(self):
         """
         Testing that everything reads in correctly.
 
         Very basic tests that will only break if the names of the fields change later.
         """
-        test_class = FileStrings('light_dir', 'sub_dir', 'light_file', 'sed_file', np.arange(2))
-        self.assertEqual(test_class.lightcone_directory, 'light_dir')
-        self.assertEqual(test_class.sub_directory, 'sub_dir')
-        self.assertEqual(test_class.lightcone_file, 'light_file')
-        self.assertEqual(test_class.sed_file, 'sed_file')
+        test_class = FileStrings(
+            "light_dir", "sub_dir", "light_file", "sed_file", np.arange(2)
+        )
+        self.assertEqual(test_class.lightcone_directory, "light_dir")
+        self.assertEqual(test_class.sub_directory, "sub_dir")
+        self.assertEqual(test_class.lightcone_file, "light_file")
+        self.assertEqual(test_class.sed_file, "sed_file")
         npt.assert_equal(test_class.sub_volumes, np.arange(2))
+
 
 class TestConfig(unittest.TestCase):
     """
@@ -49,16 +54,18 @@ class TestConfig(unittest.TestCase):
     """
 
     test_config_class = Config(
-            cosmo = FlatLambdaCDM(H0=70, Om0=0.3),
-            cat_details=CatalogueDetails(1, 'g', 20, 0.1, '1.0'),
-            group_props_read={'groups':['ra', 'dec']},
-            gal_props_read= {'galaxies': ['zobs']},
-            gal_props_write=['zobs', 'zcos'],
-            group_props_write=['angsep'],
-            sed_fields={'SED/dust': ['total']},
-            dirs = FileStrings('light_dir', 'sub_dir', 'light_file', 'sed_file', np.arange(2)),
-            outfile_prefix='test'
-        )
+        cosmo=FlatLambdaCDM(H0=70, Om0=0.3),
+        cat_details=CatalogueDetails(1, "g", 20, 0.1, "1.0"),
+        group_props_read={"groups": ["ra", "dec"]},
+        gal_props_read={"galaxies": ["zobs"]},
+        gal_props_write=["zobs", "zcos"],
+        group_props_write=["angsep"],
+        sed_fields={"SED/dust": ["total"]},
+        dirs=FileStrings(
+            "light_dir", "sub_dir", "light_file", "sed_file", np.arange(2)
+        ),
+        outfile_prefix="test",
+    )
 
     def test_read(self):
         """
@@ -72,26 +79,28 @@ class TestConfig(unittest.TestCase):
         # Testing Cat-Details
         self.assertIsInstance(self.test_config_class.cat_details, CatalogueDetails)
         self.assertEqual(self.test_config_class.cat_details.area, 1)
-        self.assertEqual(self.test_config_class.cat_details.mag_filter, 'g')
+        self.assertEqual(self.test_config_class.cat_details.mag_filter, "g")
         self.assertEqual(self.test_config_class.cat_details.mag_cut, 20)
         self.assertEqual(self.test_config_class.cat_details.redshift_cut, 0.1)
-        self.assertEqual(self.test_config_class.cat_details.version, '1.0')
+        self.assertEqual(self.test_config_class.cat_details.version, "1.0")
 
         # Testing groups_props_read and gal props read
         self.assertIsInstance(self.test_config_class.group_props_read, dict)
         self.assertIsInstance(self.test_config_class.gal_props_read, dict)
-        self.assertEqual(self.test_config_class.group_props_read['groups'], ['ra', 'dec'])
-        self.assertEqual(self.test_config_class.gal_props_read['galaxies'], ['zobs'])
+        self.assertEqual(
+            self.test_config_class.group_props_read["groups"], ["ra", "dec"]
+        )
+        self.assertEqual(self.test_config_class.gal_props_read["galaxies"], ["zobs"])
 
         # Testing group_prop_write and gal_prop_write
         self.assertIsInstance(self.test_config_class.group_props_write, list)
         self.assertIsInstance(self.test_config_class.gal_props_write, list)
-        self.assertEqual(self.test_config_class.gal_props_write, ['zobs', 'zcos'])
-        self.assertEqual(self.test_config_class.group_props_write, ['angsep'])
+        self.assertEqual(self.test_config_class.gal_props_write, ["zobs", "zcos"])
+        self.assertEqual(self.test_config_class.group_props_write, ["angsep"])
 
         # Testing sed fields
         self.assertIsInstance(self.test_config_class.sed_fields, dict)
-        self.assertEqual(self.test_config_class.sed_fields['SED/dust'], ['total'])
+        self.assertEqual(self.test_config_class.sed_fields["SED/dust"], ["total"])
 
         # Testing directory strings. This is already tested above so we just need to test instance.
         self.assertIsInstance(self.test_config_class.dirs, FileStrings)
@@ -102,21 +111,21 @@ class TestConfig(unittest.TestCase):
         Specifically if the file returns the correct sed or mock file when promted.
         """
         # Testing SED
-        parent_dir, sub_dir, file = self.test_config_class.dump_directory('sed')
-        self.assertEqual(parent_dir, 'light_dir')
-        self.assertEqual(sub_dir, 'sub_dir')
-        self.assertEqual(file, 'sed_file')
+        parent_dir, sub_dir, file = self.test_config_class.dump_directory("sed")
+        self.assertEqual(parent_dir, "light_dir")
+        self.assertEqual(sub_dir, "sub_dir")
+        self.assertEqual(file, "sed_file")
 
         # Testing lightcone
-        _, _, file = self.test_config_class.dump_directory('mock')
-        self.assertEqual(file, 'light_file')
+        _, _, file = self.test_config_class.dump_directory("mock")
+        self.assertEqual(file, "light_file")
 
     def test_dump_directory_validation(self):
         """
         Testing that a ValueError is rasied when we don't use 'mock' or 'sed'
         """
         with self.assertRaises(ValueError) as context:
-            self.test_config_class.dump_directory('garbage_input')
+            self.test_config_class.dump_directory("garbage_input")
 
         correct_error_string = 'file_type must be "sed" or "mock" not "garbage_input"'
         self.assertEqual(str(context.exception), correct_error_string)
@@ -125,22 +134,22 @@ class TestConfig(unittest.TestCase):
         """
         Testing the print full file name method in the Config class
         """
-        val = self.test_config_class.print_full_file_name('mock', 0, mock_or_sed='mock')
-        required = os.path.join('light_dir', 'sub_dir', 'light_file.0.hdf5')
+        val = self.test_config_class.print_full_file_name("mock", 0, mock_or_sed="mock")
+        required = os.path.join("light_dir", "sub_dir", "light_file.0.hdf5")
         self.assertEqual(val, required)
 
 
 class TestLoadingFunctions(unittest.TestCase):
     """
-    Testing all the loading functions in the load module. 
+    Testing all the loading functions in the load module.
     """
 
-    with open('tests/config_testcase.yml', encoding='utf-8') as file:
+    with open("tests/config_testcase.yml", encoding="utf-8") as file:
         settings = yaml.safe_load(file)
 
     def test_load_cosmology(self):
         """
-        Testing the load cosmology function. 
+        Testing the load cosmology function.
         """
         cosmo = load_cosmo(self.settings)
         self.assertIsInstance(cosmo, FlatLambdaCDM)
@@ -151,7 +160,9 @@ class TestLoadingFunctions(unittest.TestCase):
         """
         Testing that load_cat_details function.
         """
-        cat_details = CatalogueDetails(107.889, 'total_ap_dust_Z_VISTA', 21.2, 3, 'a0.0.1')
+        cat_details = CatalogueDetails(
+            107.889, "total_ap_dust_Z_VISTA", 21.2, 3, "a0.0.1"
+        )
         val = load_cat_details(self.settings)
         self.assertIsInstance(val, CatalogueDetails)
         self.assertEqual(val.area, cat_details.area)
@@ -165,8 +176,8 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_read_properties function
         """
         # reading in correctly.
-        real_gal_dict = {'galaxies': ('ra', 'dec')} # alphabetical
-        real_group_dict = {'groups': ('id_group_sky', 'zobs')}
+        real_gal_dict = {"galaxies": ("ra", "dec")}  # alphabetical
+        real_group_dict = {"groups": ("id_group_sky", "zobs")}
         val_groups, val_gals = load_read_properties(self.settings)
         self.assertIsInstance(val_groups, dict)
         self.assertIsInstance(val_gals, dict)
@@ -175,8 +186,8 @@ class TestLoadingFunctions(unittest.TestCase):
 
         # test assertion is working correctly
         broken_settings = self.settings
-        broken_settings['Properties_To_Read_In']['galaxies'].append('test_gals')
-        broken_settings['Properties_To_Read_In']['groups'].append('test_groups')
+        broken_settings["Properties_To_Read_In"]["galaxies"].append("test_gals")
+        broken_settings["Properties_To_Read_In"]["groups"].append("test_groups")
         with self.assertRaises(AttributeError) as context:
             load_read_properties(broken_settings)
         correct_error_string = "1 bad group field(s) and 1 bad galaxy field(s) found. \nBad group fields: ['test_groups'] \nBad galaxy fields: ['test_gals']"
@@ -187,8 +198,8 @@ class TestLoadingFunctions(unittest.TestCase):
         Testing the load_write_properties
         """
         group_val, gal_val = load_write_properties(self.settings)
-        gal_correct = ['id_galaxy_sky', 'ra','dec']
-        group_correct = ['unique_group_id', 'flag']
+        gal_correct = ["id_galaxy_sky", "ra", "dec"]
+        group_correct = ["unique_group_id", "flag"]
         self.assertEqual(group_val, group_correct)
         self.assertEqual(gal_val, gal_correct)
 
@@ -198,20 +209,22 @@ class TestLoadingFunctions(unittest.TestCase):
         """
         # Testing working for list of sub volumes
         test_settings = self.settings
-        test_settings['Sub_Volumes']  = [1, 3, 4, 5]
+        test_settings["Sub_Volumes"] = [1, 3, 4, 5]
         correct_answer = np.array([1, 3, 4, 5])
         npt.assert_equal(load_subvolumes(test_settings), correct_answer)
 
         # Testing working for a single value of sub volumes
-        test_settings['Sub_Volumes'] = 64
+        test_settings["Sub_Volumes"] = 64
         correct_answer = np.arange(64)
         npt.assert_equal(correct_answer, load_subvolumes(test_settings))
 
         # Test Validation
-        test_settings['Sub_Volumes'] = 'garbage_input'
+        test_settings["Sub_Volumes"] = "garbage_input"
         with self.assertRaises(ValueError) as context:
             load_subvolumes(test_settings)
-        correct_error_message = "Sub_Volumes must be either or list or a single integer/float"
+        correct_error_message = (
+            "Sub_Volumes must be either or list or a single integer/float"
+        )
         self.assertEqual(correct_error_message, str(context.exception))
 
 
@@ -219,13 +232,14 @@ class TestLoadDirectoryString(unittest.TestCase):
     """
     Testing the load_directory_string function
     """
+
     def setUp(self):
         self.input_params = {
             "Lightcone_Directory": "/fake/path/lightcone",
             "Sub_Directory": "subdir",
             "SED_file": "sed_file",
             "Lightcone_file": "mock_file",
-            "Sub_Volumes": [0, 1, 2]  # Test with a few sub-volumes
+            "Sub_Volumes": [0, 1, 2],  # Test with a few sub-volumes
         }
 
     @patch("os.path.isfile")
@@ -258,7 +272,9 @@ class TestLoadDirectoryString(unittest.TestCase):
         ]
 
         # Check if mock_isfile was called with expected file paths
-        expected_calls = [((file,),) for file in (expected_sed_files + expected_mock_files)]
+        expected_calls = [
+            ((file,),) for file in (expected_sed_files + expected_mock_files)
+        ]
         mock_isfile.assert_has_calls(expected_calls, any_order=True)
 
     @patch("os.path.isfile")
@@ -271,13 +287,14 @@ class TestLoadDirectoryString(unittest.TestCase):
 
         # Verify that FileNotFoundError is raised
         with self.assertRaises(FileNotFoundError):
-            load_directory_string(self.input_params) 
+            load_directory_string(self.input_params)
 
 
 class TestValidateInputFile(unittest.TestCase):
     """
     Testing the validate_input_file function
     """
+
     def setUp(self):
         # Define a base set of input parameters with all required settings
         self.valid_input_parameters = {
@@ -363,6 +380,7 @@ class TestLoadAllFunction(unittest.TestCase):
     """
     Testing the load_all function.
     """
+
     @patch("load.validate_input_file")
     @patch("load.load_cosmo")
     @patch("load.load_directory_string")
@@ -372,16 +390,34 @@ class TestLoadAllFunction(unittest.TestCase):
     @patch("builtins.open")
     @patch("yaml.safe_load")
     def test_load_all(
-        self, mock_yaml_load, mock_open, mock_cat_details, 
-        mock_load_write_props, mock_load_read_props, 
-        mock_load_dir, mock_load_cosmo, mock_validate
+        self,
+        mock_yaml_load,
+        mock_open,
+        mock_cat_details,
+        mock_load_write_props,
+        mock_load_read_props,
+        mock_load_dir,
+        mock_load_cosmo,
+        mock_validate,
     ):
         # Mock YAML content
         mock_yaml_load.return_value = {
             "Cosmology": {"H0": 70, "Om0": 0.3},
-            "Catalogue_Details": {"area": 100, "mag_filter": "r", "mag_cut": 24.5, "redshift_cut": 1.0, "version": "1.0"},
-            "Properties_To_Read_In": {"groups": ["group_id"], "galaxies": ["galaxy_id"]},
-            "Properties_To_Write": {"groups": ["group_mass"], "galaxies": ["galaxy_luminosity"]},
+            "Catalogue_Details": {
+                "area": 100,
+                "mag_filter": "r",
+                "mag_cut": 24.5,
+                "redshift_cut": 1.0,
+                "version": "1.0",
+            },
+            "Properties_To_Read_In": {
+                "groups": ["group_id"],
+                "galaxies": ["galaxy_id"],
+            },
+            "Properties_To_Write": {
+                "groups": ["group_mass"],
+                "galaxies": ["galaxy_luminosity"],
+            },
             "SED_fields": {"field1": "data1"},
             "Lightcone_Directory": "/path/to/lightcone/",
             "Sub_Directory": "/path/to/sub/",
@@ -398,9 +434,12 @@ class TestLoadAllFunction(unittest.TestCase):
             sub_directory="/path/to/sub/",
             sed_file="sed_file",
             lightcone_file="lightcone_file",
-            sub_volumes=[0, 1, 2]
+            sub_volumes=[0, 1, 2],
         )
-        mock_load_read_props.return_value = ({"groups": ["group_id"]}, {"galaxies": ["galaxy_id"]})
+        mock_load_read_props.return_value = (
+            {"groups": ["group_id"]},
+            {"galaxies": ["galaxy_id"]},
+        )
         mock_load_write_props.return_value = (["group_mass"], ["galaxy_luminosity"])
         mock_cat_details.return_value = CatalogueDetails(
             area=100, mag_filter="r", mag_cut=24.5, redshift_cut=1.0, version="1.0"
@@ -446,6 +485,7 @@ class TestRemoveDuplicatedList(unittest.TestCase):
         test_list = [5, 6, 6, 7, 1, 2, 3, 2]
         val_list = remove_duplicates_in_list(test_list)
         self.assertListEqual(val_list, [5, 6, 7, 1, 2, 3])
+
 
 if __name__ == "__main__":
     unittest.main()

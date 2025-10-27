@@ -63,14 +63,18 @@ class Config:
             raise ValueError(f'file_type must be "sed" or "mock" not "{file_type}"')
         return self.dirs.lightcone_directory, self.dirs.sub_directory, file_name
 
-    def print_full_file_name(self, file_type: str, sub_volume: int, mock_or_sed: str) -> str:
+    def print_full_file_name(
+        self, file_type: str, sub_volume: int, mock_or_sed: str
+    ) -> str:
         """
         Returns the full path name for the given file type and sub_volume
         """
         parent_dir, sub_dir, file_name = self.dump_directory(file_type)
-        if mock_or_sed == 'sed':
-            val = os.path.join(parent_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5")
-        elif mock_or_sed == 'mock':
+        if mock_or_sed == "sed":
+            val = os.path.join(
+                parent_dir, sub_dir, f"{file_name}_{sub_volume:02d}.hdf5"
+            )
+        elif mock_or_sed == "mock":
             val = os.path.join(parent_dir, sub_dir, f"{file_name}.{sub_volume}.hdf5")
         else:
             raise NameError("mock_or_sed needs to be 'mock' or 'sed'")
@@ -102,7 +106,7 @@ def load_cat_details(input_params: dict) -> CatalogueDetails:
 
 def remove_duplicates_in_list(possibly_duplicated_list: list) -> list:
     """
-    Removes duplicated values in a list but preserves the order. 
+    Removes duplicated values in a list but preserves the order.
     """
     return list(dict.fromkeys(possibly_duplicated_list))
 
@@ -113,11 +117,18 @@ def load_read_properties(input_parameters: dict) -> tuple[dict]:
     """
 
     group_fields = {
-        "groups": tuple(remove_duplicates_in_list(input_parameters["Properties_To_Read_In"]["groups"]))
+        "groups": tuple(
+            remove_duplicates_in_list(
+                input_parameters["Properties_To_Read_In"]["groups"]
+            )
+        )
     }
     galaxy_fields = {
         "galaxies": tuple(
-            remove_duplicates_in_list(input_parameters["Properties_To_Read_In"]["galaxies"]))
+            remove_duplicates_in_list(
+                input_parameters["Properties_To_Read_In"]["galaxies"]
+            )
+        )
     }
 
     # Checking that these fields actually even exist in the first place.
@@ -155,8 +166,12 @@ def load_write_properties(input_parameters: dict) -> tuple[list]:
     """
     # We need to check that we can even make these properties. This is so far down the line
     # that its important to do. Recommend creating Write_Properties_YAML straight from the
-    group_props = remove_duplicates_in_list(input_parameters["Properties_To_Write"]["groups"])
-    gal_props = remove_duplicates_in_list(input_parameters["Properties_To_Write"]["galaxies"])
+    group_props = remove_duplicates_in_list(
+        input_parameters["Properties_To_Write"]["groups"]
+    )
+    gal_props = remove_duplicates_in_list(
+        input_parameters["Properties_To_Write"]["galaxies"]
+    )
 
     # warn if multiple values are found
     if len(set(input_parameters["Properties_To_Write"]["groups"])) != len(
@@ -262,14 +277,16 @@ def validate_input_file(input_parameters: dict) -> None:
         )
 
 
-def load_all(config_filename: str = 'config.yml') -> Config:
+def load_all(config_filename: str = "config.yml") -> Config:
     """
     Main function which loads all the settings and returns the 'Config' class.
     """
     with open(config_filename, encoding="utf-8") as file:
         settings = yaml.safe_load(file)
 
-    validate_input_file(settings)  # checks that all the settings are there in the first place.
+    validate_input_file(
+        settings
+    )  # checks that all the settings are there in the first place.
     cosmo = load_cosmo(settings)  # checks cosmology is correct.
     file_strings = load_directory_string(settings)  # checks files actually exist.
     group_read_props, gal_read_props = load_read_properties(settings)

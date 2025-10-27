@@ -23,7 +23,7 @@ def read_spectra(
 
     The wavelengths can/should be read separately.
     """
-    print(f'Getting spectra from: {file_name}')
+    print(f"Getting spectra from: {file_name}")
     spectra = h5py.File(file_name)
     sky_ids = spectra["id_galaxy_sky"][:]
 
@@ -54,8 +54,10 @@ def read_all_spectra(
     """
     spectra_files = np.sort(glob.glob(f"{directory}/{file_stub}*.hdf5"))
     if matching_ids is not None:
-        spectra_results = [ read_spectra(file, match=True, match_ids=matching_ids)
-                for file in spectra_files]
+        spectra_results = [
+            read_spectra(file, match=True, match_ids=matching_ids)
+            for file in spectra_files
+        ]
         # Filter values that had no overlap.
         spectra_results = [result for result in spectra_results if result is not None]
         spectra_table = np.vstack(spectra_results)
@@ -69,7 +71,7 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     """
     Reads in the mock data using the group/gal to read values in the config file.
     loops over all subvolumes stored in the config file and adds the columns of the selected
-    data together into numpy arrays. This is then returned as a dictionary where every key is 
+    data together into numpy arrays. This is then returned as a dictionary where every key is
     the column that needs to be read in and value is the concatenation of all the data across
     all the subvolumes.
     """
@@ -78,13 +80,13 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
         fields = config.gal_props_read
     elif source_type == "group":
         fields = config.group_props_read
-        print('fields: ', fields)
+        print("fields: ", fields)
     else:
         raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
 
     data = defaultdict(list)
     for sub_volume in config.dirs.sub_volumes:
-        full_name = config.print_full_file_name("mock", sub_volume, mock_or_sed='mock')
+        full_name = config.print_full_file_name("mock", sub_volume, mock_or_sed="mock")
         print(f"Reading data from: {full_name}")
         with h5py.File(full_name, "r") as f:
             for group_name, data_names in fields.items():
@@ -101,7 +103,7 @@ def read_filter_names(config: Config) -> list[str]:
     """
     Returns a list of the filter names for the given sed file.
     """
-    full_name = config.print_full_file_name("sed", 0, mock_or_sed='sed')
+    full_name = config.print_full_file_name("sed", 0, mock_or_sed="sed")
     with h5py.File(full_name, "r") as f:
         filter_names = f["filters"][:]
         filter_names = [filter_name.decode() for filter_name in filter_names]
@@ -132,7 +134,7 @@ def read_photometry_data_hdf5(config: Config) -> tuple[np.ndarray, dict]:
     ids = []
 
     for sub_volume in config.dirs.sub_volumes:
-        full_name = config.print_full_file_name("sed", sub_volume, mock_or_sed='sed')
+        full_name = config.print_full_file_name("sed", sub_volume, mock_or_sed="sed")
         print(f"Reading data from: {full_name}")
 
         with h5py.File(full_name, "r") as file:

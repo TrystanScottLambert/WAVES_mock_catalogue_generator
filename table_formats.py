@@ -66,8 +66,8 @@ class CalculatedTable:
             list_of_columns = self.list_columns()
 
         columns = [self.get_column(col_name) for col_name in list_of_columns]
-        header_dict = {column.column_name : column.description for column in columns}
-        writeable_dict = {column.column_name : column.data for column in columns}
+        header_dict = {column.column_name: column.description for column in columns}
+        writeable_dict = {column.column_name: column.data for column in columns}
         return header_dict, writeable_dict
 
 
@@ -132,14 +132,22 @@ class GalaxyTable(CalculatedTable):
     @property
     def bulge_axis_ratio(self) -> DataDescription:
         """
-        In Shark, bulges are perfectly spherical, so we sample their axis ratios from 
+        In Shark, bulges are perfectly spherical, so we sample their axis ratios from
         https://ui.adsabs.harvard.edu/link_gateway/2023A&A...671A.102E/doi:10.1051/0004-6361/202245042
         """
         column_name = "bulge_axis_ratio"
         description = "Bulge axis ratio"
-        loc_bulge, scale_bulge, clip_a_bulge, clip_b_bulge = 0.7, 0.3, 0., 1.
-        a_bulge, b_bulge = (clip_a_bulge - loc_bulge) / scale_bulge, (clip_b_bulge - loc_bulge) / scale_bulge
-        value = truncnorm.rvs(a_bulge, b_bulge, loc=loc_bulge, scale=scale_bulge, size=len(self.mstars_bulge.data))
+        loc_bulge, scale_bulge, clip_a_bulge, clip_b_bulge = 0.7, 0.3, 0.0, 1.0
+        a_bulge, b_bulge = (clip_a_bulge - loc_bulge) / scale_bulge, (
+            clip_b_bulge - loc_bulge
+        ) / scale_bulge
+        value = truncnorm.rvs(
+            a_bulge,
+            b_bulge,
+            loc=loc_bulge,
+            scale=scale_bulge,
+            size=len(self.mstars_bulge.data),
+        )
         return DataDescription(column_name, description, value)
 
     @property
@@ -153,11 +161,18 @@ class GalaxyTable(CalculatedTable):
         """
         column_name = "disk_axis_ratio"
         description = "Disk axis ratio"
-        value = np.sin(self.inclination.data*np.pi/180) * ((self.rstar_disk_intrinsic.data*10**3/self.cosmo.h) - (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3) + (self.rstar_disk_intrinsic.data*10**3/self.cosmo.h)/7.3
+        value = (
+            np.sin(self.inclination.data * np.pi / 180)
+            * (
+                (self.rstar_disk_intrinsic.data * 10**3 / self.cosmo.h)
+                - (self.rstar_disk_intrinsic.data * 10**3 / self.cosmo.h) / 7.3
+            )
+            + (self.rstar_disk_intrinsic.data * 10**3 / self.cosmo.h) / 7.3
+        )
         return DataDescription(column_name, description, value)
 
     @property
-    def bulge_half_light_radius(self, key='half-mass') -> DataDescription:
+    def bulge_half_light_radius(self, key="half-mass") -> DataDescription:
         """
         This function computes the half-light radius of the bulge from its intrinsic half-mass radius.
         If key = 'half-mass', then we assume the two to be the same.
@@ -166,12 +181,23 @@ class GalaxyTable(CalculatedTable):
         """
         column_name = "bulge_r50"
         description = "Bulge half-light radius"
-        if key == 'half-mass':
+        if key == "half-mass":
             value = self.rstar_bulge_intrinsic.data
-        elif key == 'Suess+19':
-            z_values=np.array([0.25, 0.75, 1.25, 1.75, 2.25])
-            ratio_half_light_half_mass_suess19 = np.array([4/3, 2.8/1.9, 1.8/1.4, 1.6/1.3, 1.])
-            f_interp = interpolate.interp1d(z_values, ratio_half_light_half_mass_suess19, kind='linear', fill_value=(ratio_half_light_half_mass_suess19[0],ratio_half_light_half_mass_suess19[-1]), bounds_error=False)
+        elif key == "Suess+19":
+            z_values = np.array([0.25, 0.75, 1.25, 1.75, 2.25])
+            ratio_half_light_half_mass_suess19 = np.array(
+                [4 / 3, 2.8 / 1.9, 1.8 / 1.4, 1.6 / 1.3, 1.0]
+            )
+            f_interp = interpolate.interp1d(
+                z_values,
+                ratio_half_light_half_mass_suess19,
+                kind="linear",
+                fill_value=(
+                    ratio_half_light_half_mass_suess19[0],
+                    ratio_half_light_half_mass_suess19[-1],
+                ),
+                bounds_error=False,
+            )
             ratio_half_light_half_mass = f_interp(self.zobs.data)
             value = self.rstar_bulge_intrinsic.data * ratio_half_light_half_mass
         else:
@@ -179,7 +205,7 @@ class GalaxyTable(CalculatedTable):
         return DataDescription(column_name, description, value)
 
     @property
-    def disk_half_light_radius(self, key='half-mass') -> DataDescription:
+    def disk_half_light_radius(self, key="half-mass") -> DataDescription:
         """
         This function computes the half-light radius of the disk from its intrinsic half-mass radius.
         If key = 'half-mass', then we assume the two to be the same.
@@ -188,17 +214,29 @@ class GalaxyTable(CalculatedTable):
         """
         column_name = "disk_r50"
         description = "Disk half-light radius"
-        if key == 'half-mass':
+        if key == "half-mass":
             value = self.rstar_disk_intrinsic.data
-        elif key == 'Suess+19':
-            z_values=np.array([0.25, 0.75, 1.25, 1.75, 2.25])
-            ratio_half_light_half_mass_suess19 = np.array([6/4, 5/3.3, 4.3/2.9, 3.8/3, 3.1/2.9])
-            f_interp = interpolate.interp1d(z_values, ratio_half_light_half_mass_suess19, kind='linear', fill_value=(ratio_half_light_half_mass_suess19[0],ratio_half_light_half_mass_suess19[-1]), bounds_error=False)
+        elif key == "Suess+19":
+            z_values = np.array([0.25, 0.75, 1.25, 1.75, 2.25])
+            ratio_half_light_half_mass_suess19 = np.array(
+                [6 / 4, 5 / 3.3, 4.3 / 2.9, 3.8 / 3, 3.1 / 2.9]
+            )
+            f_interp = interpolate.interp1d(
+                z_values,
+                ratio_half_light_half_mass_suess19,
+                kind="linear",
+                fill_value=(
+                    ratio_half_light_half_mass_suess19[0],
+                    ratio_half_light_half_mass_suess19[-1],
+                ),
+                bounds_error=False,
+            )
             ratio_half_light_half_mass = f_interp(self.zobs.data)
             value = self.rstar_disk_intrinsic.data * ratio_half_light_half_mass
         else:
             raise KeyError
         return DataDescription(column_name, description, value)
+
 
 class GroupTable(CalculatedTable):
     """
