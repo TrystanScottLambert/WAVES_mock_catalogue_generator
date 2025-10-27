@@ -139,6 +139,12 @@ class TestReadLightCone(unittest.TestCase):
         create_test_hdf5(
             "test_example_01.hdf5", self.ras, self.decs, gal_ids_1, group_ids_1
         )
+        create_test_hdf5(
+            "test_example.0.hdf5", self.ras, self.decs, gal_ids_0, group_ids_0
+        )
+        create_test_hdf5(
+            "test_example.1.hdf5", self.ras, self.decs, gal_ids_1, group_ids_1
+        )
 
     def test_input_validation(self):
         """Tests that if the wrong source type is entered an error is raised."""

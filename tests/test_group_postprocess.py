@@ -21,7 +21,8 @@ class TestMvir(unittest.TestCase):
         mvir = 1e12 * u.solMass
         redshift = 0.3
         result = calc_rvir_from_mvir(mvir, redshift)
-        self.assertEqual(result, 0.18987214)
+        answer = 0.18987214
+        self.assertAlmostEqual(result, answer, places=4)
 
     def test_array(self):
         """

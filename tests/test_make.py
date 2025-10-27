@@ -49,6 +49,7 @@ class TestFilteringMagnitudes(unittest.TestCase):
         "id": np.arange(3),
         "dec": np.arange(3) - 20,
         "ra": np.arange(3) + 100,
+        "zobs": np.repeat(0.2, 3)
     }
 
     def test_simple_case(self):

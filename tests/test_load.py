@@ -253,7 +253,7 @@ class TestLoadDirectoryString(unittest.TestCase):
             for i in [0, 1, 2]
         ]
         expected_mock_files = [
-            os.path.join("/fake/path/lightcone", "subdir", f"mock_file_{i:02d}.hdf5")
+            os.path.join("/fake/path/lightcone", "subdir", f"mock_file.{i}.hdf5")
             for i in [0, 1, 2]
         ]
 
