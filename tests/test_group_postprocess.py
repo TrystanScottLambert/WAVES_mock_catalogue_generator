@@ -6,7 +6,7 @@ import unittest
 import astropy.units as u
 import numpy as np
 
-from group_post_process import calc_rvir_from_mvir, Group
+from group_post_process import calc_rvir_from_mvir, Group, join_groups
 
 
 class TestMvir(unittest.TestCase):
@@ -41,10 +41,10 @@ class TestOverlap(unittest.TestCase):
     Testing that the overlap method in a group works.
     """
 
-    group_1 = Group(1e15, 0.0, 0.0, 0.2)
-    group_2 = Group(1e15, 0.0, 0.0, 0.2)
-    group_3 = Group(1e15, 180, 0, 0.2)
-    group_4 = Group(1e15, 0.0, 0.0, 1)
+    group_1 = Group(1e15, 0.0, 0.0, 0.2, "a")
+    group_2 = Group(1e15, 0.0, 0.0, 0.2, "b")
+    group_3 = Group(1e15, 180, 0, 0.2, "c")
+    group_4 = Group(1e15, 0.0, 0.0, 1, "d")
 
     def test_trivial_case(self):
         """test true for same group"""
@@ -62,6 +62,36 @@ class TestOverlap(unittest.TestCase):
         Testing fail when groups are behind one another.
         """
         self.assertFalse(self.group_1.overlap(self.group_4))
+
+
+class TestGrouping(unittest.TestCase):
+    """
+    Testing the join_groups function.
+    """
+
+    def test_simple(self):
+        """
+        Simple test case of two groups far away and one isoalted group
+        """
+        group_1 = Group(1e15, 0, 0, 0.2, "a")
+        group_2 = Group(1e15, 0, 0, 0.2, "b")
+        group_3 = Group(1e15, 0, 0, 0.2, "c")
+
+        group_4 = Group(1e15, 180, 0, 0.2, "d")
+        group_5 = Group(1e15, 180, 0, 0.2, "e")
+        group_6 = Group(1e15, 180, 0, 0.2, "f")
+
+        group_7 = Group(1e15, 180, -45, 1, "g")  # isolated
+
+        groups = [group_1, group_4, group_5, group_7, group_3, group_2, group_6]
+        mapping = join_groups(groups)
+        self.assertEqual(mapping["a"], 1)
+        self.assertEqual(mapping['b'], 1)
+        self.assertEqual(mapping['c'], 1)
+        self.assertEqual(mapping['d'], 2)
+        self.assertEqual(mapping['e'], 2)
+        self.assertEqual(mapping['f'], 2)
+        self.assertEqual(mapping['g'], -1)
 
 
 if __name__ == "__main__":
