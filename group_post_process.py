@@ -11,6 +11,7 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 import numpy as np
 import networkx as nx
+import polars as pl
 
 
 def calc_rvir_from_mvir(
@@ -87,5 +88,75 @@ def join_groups(groups: list[Group]) -> dict[str, int]:
         else:
             for g in group:
                 mapping[g] = counter
-            counter+=1
+            counter += 1
     return mapping
+
+
+import polars as pl
+import numpy as np
+
+
+def add_fof_ids(galaxies_file: str, groups_file: str):
+    """
+    Builds a list of joined groups which represent the ids that can be used to tune group-finders.
+    Reads in the already generated mock parquet files.
+    """
+    # Read in
+    df_galaxies = pl.read_parquet(galaxies_file)
+    df_groups = pl.read_parquet(groups_file)
+
+    # Extract group properties
+    ras = np.array(df_groups["ra"])
+    decs = np.array(df_groups["dec"])
+    zcos = np.array(df_groups["zcos"])
+    mvir = np.array(df_groups["mvir"])
+    ids = np.array(df_groups["id_group_sky"]).astype(str)
+
+    # Build group objects
+    groups = [
+        Group(m, ra, dec, z, _id)
+        for ra, dec, z, m, _id in zip(ras, decs, zcos, mvir, ids)
+    ]
+
+    # Generate mapping: id_group_sky (str) → id_fof (int)
+    new_group_mapping = join_groups(groups)
+
+    # Apply mapping to both dataframes
+    df_groups = df_groups.with_columns(
+        pl.col("id_group_sky")
+        .cast(str)
+        .map_dict(new_group_mapping, default=None)
+        .alias("id_fof")
+    )
+    df_galaxies = df_galaxies.with_columns(
+        pl.col("id_group_sky")
+        .cast(str)
+        .map_dict(new_group_mapping, default=None)
+        .alias("id_fof")
+    )
+
+    # Identify isolated FoF IDs (appear only once)
+    fof_counts = (
+        df_groups.group_by("id_fof")
+        .len()
+        .filter(pl.col("len") == 1)
+        .select("id_fof")
+        .to_series()
+        .to_list()
+    )
+
+    # Replace isolated ids with -1
+    df_groups = df_groups.with_columns(
+        pl.when(pl.col("id_fof").is_in(fof_counts))
+        .then(-1)
+        .otherwise(pl.col("id_fof"))
+        .alias("id_fof")
+    )
+    df_galaxies = df_galaxies.with_columns(
+        pl.when(pl.col("id_fof").is_in(fof_counts))
+        .then(-1)
+        .otherwise(pl.col("id_fof"))
+        .alias("id_fof")
+    )
+
+    return df_galaxies, df_groups

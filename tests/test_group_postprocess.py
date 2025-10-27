@@ -2,11 +2,16 @@
 Unit tests for the group post-processing module.
 """
 
+from pathlib import Path
+import tempfile
 import unittest
 import astropy.units as u
 import numpy as np
+import polars as pl
+
 
 from group_post_process import calc_rvir_from_mvir, Group, join_groups
+import group_post_process
 
 
 class TestMvir(unittest.TestCase):
@@ -86,12 +91,12 @@ class TestGrouping(unittest.TestCase):
         groups = [group_1, group_4, group_5, group_7, group_3, group_2, group_6]
         mapping = join_groups(groups)
         self.assertEqual(mapping["a"], 1)
-        self.assertEqual(mapping['b'], 1)
-        self.assertEqual(mapping['c'], 1)
-        self.assertEqual(mapping['d'], 2)
-        self.assertEqual(mapping['e'], 2)
-        self.assertEqual(mapping['f'], 2)
-        self.assertEqual(mapping['g'], -1)
+        self.assertEqual(mapping["b"], 1)
+        self.assertEqual(mapping["c"], 1)
+        self.assertEqual(mapping["d"], 2)
+        self.assertEqual(mapping["e"], 2)
+        self.assertEqual(mapping["f"], 2)
+        self.assertEqual(mapping["g"], -1)
 
 
 if __name__ == "__main__":
