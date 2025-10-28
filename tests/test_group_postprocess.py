@@ -7,7 +7,11 @@ import astropy.units as u
 import numpy as np
 
 
-from group_post_process import calc_rvir_from_mvir, Group, join_groups
+from group_post_process import (
+    calc_rvir_from_mvir,
+    skycoord_to_cartesian_vectorized,
+    join_groups,
+)
 
 
 class TestMvir(unittest.TestCase):
@@ -37,34 +41,6 @@ class TestMvir(unittest.TestCase):
             self.assertAlmostEqual(res, ans, places=4)
 
 
-class TestOverlap(unittest.TestCase):
-    """
-    Testing that the overlap method in a group works.
-    """
-
-    group_1 = Group(1e15, 0.0, 0.0, 0.2, "a")
-    group_2 = Group(1e15, 0.0, 0.0, 0.2, "b")
-    group_3 = Group(1e15, 180, 0, 0.2, "c")
-    group_4 = Group(1e15, 0.0, 0.0, 1, "d")
-
-    def test_trivial_case(self):
-        """test true for same group"""
-        self.assertTrue(self.group_1.overlap(self.group_2))
-        self.assertTrue(self.group_2.overlap(self.group_1))
-
-    def test_on_sky_sep(self):
-        """
-        Testing fails when we separate group on sky.
-        """
-        self.assertFalse(self.group_1.overlap(self.group_3))
-
-    def test_behind(self):
-        """
-        Testing fail when groups are behind one another.
-        """
-        self.assertFalse(self.group_1.overlap(self.group_4))
-
-
 class TestGrouping(unittest.TestCase):
     """
     Testing the join_groups function.
@@ -74,18 +50,15 @@ class TestGrouping(unittest.TestCase):
         """
         Simple test case of two groups far away and one isoalted group
         """
-        group_1 = Group(1e15, 0, 0, 0.2, "a")
-        group_2 = Group(1e15, 0, 0, 0.2, "b")
-        group_3 = Group(1e15, 0, 0, 0.2, "c")
+        masses = np.repeat(1e15, 7) * u.solMass
 
-        group_4 = Group(1e15, 180, 0, 0.2, "d")
-        group_5 = Group(1e15, 180, 0, 0.2, "e")
-        group_6 = Group(1e15, 180, 0, 0.2, "f")
-
-        group_7 = Group(1e15, 180, -45, 1, "g")  # isolated
-
-        groups = [group_1, group_4, group_5, group_7, group_3, group_2, group_6]
-        mapping = join_groups(groups)
+        ra = np.array([0, 0, 0, 180, 180, 180, 180])
+        dec = np.array([0, 0, 0, 0, 0, 0, -45])
+        z = np.array([0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 1])
+        ids = ["a", "b", "c", "d", "e", "f", "g"]
+        centers = skycoord_to_cartesian_vectorized(ra, dec, z)
+        rvirs = calc_rvir_from_mvir(masses, z)
+        mapping = join_groups(centers, rvirs, ids)
         self.assertEqual(mapping["a"], 1)
         self.assertEqual(mapping["b"], 1)
         self.assertEqual(mapping["c"], 1)

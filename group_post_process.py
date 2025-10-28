@@ -1,9 +1,8 @@
 """
-Module for post-processing group ids
+Module for post-processing group ids - fully vectorized version
 """
 
 from typing import Union
-from dataclasses import dataclass
 
 from astropy.cosmology import Planck18
 from astropy.units import Quantity
@@ -12,6 +11,7 @@ import astropy.units as u
 import numpy as np
 import networkx as nx
 import polars as pl
+from scipy.spatial import cKDTree
 
 
 def calc_rvir_from_mvir(
@@ -32,55 +32,74 @@ def calc_rvir_from_mvir(
     return rvir_units.to(u.Mpc).value
 
 
-@dataclass
-class Group:
+def skycoord_to_cartesian_vectorized(ra, dec, zcos):
     """
-    Data class representing a group.
+    Vectorized conversion of sky coordinates to cartesian.
     """
-
-    mass: float
-    ra: float
-    dec: float
-    zcos: float
-    id: str
-
-    def __post_init__(self):
-        self.rvir = calc_rvir_from_mvir(self.mass * u.solMass, self.zcos)
-        distance = Planck18.comoving_distance(self.zcos)
-        c = SkyCoord(ra=self.ra * u.deg, dec=self.dec * u.deg, distance=distance)
-        self.center = np.array(
-            [c.cartesian.x.value, c.cartesian.y.value, c.cartesian.z.value]
-        )
-
-    def overlap(self, other_group: "Group") -> bool:
-        """
-        Determins group is overlapping with other_group
-        """
-        difference = self.center - other_group.center
-        distance_between_centers = np.sqrt(
-            (difference[0]) ** 2 + (difference[1]) ** 2 + (difference[2]) ** 2
-        )
-        total_radii = self.rvir + other_group.rvir
-        overlapped = distance_between_centers < total_radii
-        return overlapped
+    distance = Planck18.comoving_distance(zcos)
+    c = SkyCoord(ra=ra * u.deg, dec=dec * u.deg, distance=distance)
+    centers = np.column_stack(
+        [c.cartesian.x.value, c.cartesian.y.value, c.cartesian.z.value]
+    )
+    return centers
 
 
-def join_groups(groups: list[Group]) -> dict[str, int]:
+def join_groups(
+    centers: np.ndarray, rvirs: np.ndarray, ids: np.ndarray
+) -> dict[str, int]:
     """
-    Iteratively joins groups and returns the mapping to their new ids.
+    Fully vectorized version using KDTree for spatial queries.
+    No Group objects needed!
+
+    Parameters:
+    -----------
+    centers : np.ndarray
+        Nx3 array of cartesian coordinates
+    rvirs : np.ndarray
+        N array of virial radii
+    ids : np.ndarray
+        N array of group IDs (as strings)
     """
-    mapping = {}
-    edges = []
-    all_ids = [group.id for group in groups]
+    # Build KDTree for fast spatial queries
+    tree = cKDTree(centers)
+
+    # Find all pairs within possible overlap distance
+    max_search_radius = 2 * np.max(rvirs)
+
+    print(
+        f"Finding overlapping groups (max search radius: {max_search_radius:.3f} Mpc)..."
+    )
+
+    # Query pairs within max_search_radius
+    pairs = tree.query_pairs(r=max_search_radius, output_type="ndarray")
+
+    print(f"Found {len(pairs)} candidate pairs, checking actual overlaps...")
+
+    # Vectorized overlap check
+    i_indices = pairs[:, 0]
+    j_indices = pairs[:, 1]
+
+    # Calculate distances for all pairs at once
+    distances = np.linalg.norm(centers[i_indices] - centers[j_indices], axis=1)
+    total_radii = rvirs[i_indices] + rvirs[j_indices]
+
+    # Find actually overlapping pairs
+    overlapping = distances < total_radii
+    overlapping_pairs = pairs[overlapping]
+
+    print(f"Found {len(overlapping_pairs)} actual overlaps")
+
+    # Convert indices to IDs for graph
+    edges = [(ids[i], ids[j]) for i, j in overlapping_pairs]
+
+    # Build graph and find connected components
     group_graph = nx.Graph()
-    group_graph.add_nodes_from(all_ids)
-    for i in range(len(groups) - 1):
-        for j in range(i + 1, len(groups)):
-            if groups[i].overlap(groups[j]):
-                edges.append((groups[i].id, groups[j].id))
-
+    group_graph.add_nodes_from(ids)
     group_graph.add_edges_from(edges)
+
     real_groups = list(nx.connected_components(group_graph))
+
+    mapping = {}
     counter = 1
     for group in real_groups:
         if len(group) == 1:
@@ -89,11 +108,8 @@ def join_groups(groups: list[Group]) -> dict[str, int]:
             for g in group:
                 mapping[g] = counter
             counter += 1
+
     return mapping
-
-
-import polars as pl
-import numpy as np
 
 
 def add_fof_ids(galaxies_file: str, groups_file: str):
@@ -101,62 +117,50 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     Builds a list of joined groups which represent the ids that can be used to tune group-finders.
     Reads in the already generated mock parquet files.
     """
+    print("Reading parquet files...")
     # Read in
     df_galaxies = pl.read_parquet(galaxies_file)
     df_groups = pl.read_parquet(groups_file)
 
-    # Extract group properties
-    ras = np.array(df_groups["ra"])
-    decs = np.array(df_groups["dec"])
-    zcos = np.array(df_groups["zcos"])
-    mvir = np.array(df_groups["mvir"])
-    ids = np.array(df_groups["id_group_sky"]).astype(str)
+    # Extract group properties as numpy arrays
+    print("Extracting group properties...")
+    ras = df_groups["ra"].to_numpy()
+    decs = df_groups["dec"].to_numpy()
+    zcos = df_groups["zcos"].to_numpy()
+    mvir = df_groups["mvir"].to_numpy()
+    ids = df_groups["id_group_sky"].cast(str).to_numpy()
 
-    # Build group objects
-    groups = [
-        Group(m, ra, dec, z, _id)
-        for ra, dec, z, m, _id in zip(ras, decs, zcos, mvir, ids)
-    ]
+    print(f"Processing {len(ids)} groups...")
+
+    # Vectorized calculations - all at once!
+    print("Computing virial radii (vectorized)...")
+    rvirs = calc_rvir_from_mvir(mvir * u.solMass, zcos)
+
+    print("Converting to cartesian coordinates (vectorized)...")
+    centers = skycoord_to_cartesian_vectorized(ras, decs, zcos)
 
     # Generate mapping: id_group_sky (str) → id_fof (int)
-    new_group_mapping = join_groups(groups)
+    # No Group objects created at all!
+    new_group_mapping = join_groups(centers, rvirs, ids)
 
     # Apply mapping to both dataframes
+    print("Applying FoF mapping...")
+
+    # Groups file: all IDs should be in mapping
     df_groups = df_groups.with_columns(
-        pl.col("id_group_sky")
-        .cast(str)
-        .map_dict(new_group_mapping, default=None)
-        .alias("id_fof")
-    )
-    df_galaxies = df_galaxies.with_columns(
-        pl.col("id_group_sky")
-        .cast(str)
-        .map_dict(new_group_mapping, default=None)
-        .alias("id_fof")
+        pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
     )
 
-    # Identify isolated FoF IDs (appear only once)
-    fof_counts = (
-        df_groups.group_by("id_fof")
-        .len()
-        .filter(pl.col("len") == 1)
-        .select("id_fof")
-        .to_series()
-        .to_list()
-    )
-
-    # Replace isolated ids with -1
-    df_groups = df_groups.with_columns(
-        pl.when(pl.col("id_fof").is_in(fof_counts))
-        .then(-1)
-        .otherwise(pl.col("id_fof"))
-        .alias("id_fof")
-    )
     df_galaxies = df_galaxies.with_columns(
-        pl.when(pl.col("id_fof").is_in(fof_counts))
+        pl.when(
+            (pl.col("id_fof").count().over("id_fof") == 1) & (pl.col("id_fof") != -1)
+        )
         .then(-1)
         .otherwise(pl.col("id_fof"))
         .alias("id_fof")
     )
 
-    return df_galaxies, df_groups
+    print("Writing results...")
+    df_galaxies.write_parquet(galaxies_file)
+    df_groups.write_parquet(groups_file)
+    print("Done!")
