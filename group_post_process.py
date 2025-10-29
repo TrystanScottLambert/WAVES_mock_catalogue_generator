@@ -44,6 +44,106 @@ def skycoord_to_cartesian_vectorized(ra, dec, zcos):
     return centers
 
 
+def assign_ungrouped_galaxies(
+    df_galaxies: pl.DataFrame,
+    group_centers: np.ndarray,
+    group_rvirs: np.ndarray,
+    group_ids: np.ndarray,
+) -> pl.DataFrame:
+    """
+    Assign galaxies with id_group_sky == -1 to the nearest group if within that group's radius.
+
+    Parameters:
+    -----------
+    df_galaxies : pl.DataFrame
+        DataFrame containing galaxy data
+    group_centers : np.ndarray
+        Nx3 array of group cartesian coordinates
+    group_rvirs : np.ndarray
+        N array of group virial radii
+    group_ids : np.ndarray
+        N array of group IDs (as strings)
+    """
+    # Get ungrouped galaxies
+    ungrouped_mask = df_galaxies["id_group_sky"] == -1
+
+    if ungrouped_mask.sum() == 0:
+        print("No ungrouped galaxies to assign")
+        return df_galaxies
+
+    print(f"Found {ungrouped_mask.sum()} ungrouped galaxies, attempting assignment...")
+
+    # Extract ungrouped galaxy positions
+    ungrouped_df = df_galaxies.filter(ungrouped_mask)
+    ungrouped_ras = ungrouped_df["ra"].to_numpy()
+    ungrouped_decs = ungrouped_df["dec"].to_numpy()
+    ungrouped_zcos = ungrouped_df["zcos"].to_numpy()
+
+    # Convert to cartesian
+    ungrouped_positions = skycoord_to_cartesian_vectorized(
+        ungrouped_ras, ungrouped_decs, ungrouped_zcos
+    )
+
+    # Build KDTree for groups
+    tree = cKDTree(group_centers)
+
+    # For each ungrouped galaxy, find all groups within max possible radius
+    max_search_radius = np.max(group_rvirs)
+
+    # Query for nearby groups (returns list of arrays for each point)
+    nearby_indices = tree.query_ball_point(ungrouped_positions, r=max_search_radius)
+
+    # Process each ungrouped galaxy
+    new_assignments = []
+    assigned_count = 0
+
+    for gal_idx, nearby_group_indices in enumerate(nearby_indices):
+        if len(nearby_group_indices) == 0:
+            # No groups nearby
+            new_assignments.append(-1)
+            continue
+
+        # Calculate distances to all nearby groups
+        gal_pos = ungrouped_positions[gal_idx]
+        distances = np.linalg.norm(
+            group_centers[nearby_group_indices] - gal_pos, axis=1
+        )
+
+        # Check which groups contain this galaxy
+        within_radius = distances < group_rvirs[nearby_group_indices]
+
+        if not np.any(within_radius):
+            # Not within any group radius
+            new_assignments.append(-1)
+        else:
+            # Assign to nearest group that contains it
+            valid_distances = distances[within_radius]
+            valid_indices = np.array(nearby_group_indices)[within_radius]
+            nearest_idx = valid_indices[np.argmin(valid_distances)]
+            new_assignments.append(group_ids[nearest_idx])
+            assigned_count += 1
+
+    print(f"Successfully assigned {assigned_count} ungrouped galaxies to groups")
+
+    # Update the dataframe
+    # Create a mapping for ungrouped galaxies
+    ungrouped_galaxy_indices = (
+        df_galaxies.with_row_index().filter(ungrouped_mask)["index"].to_numpy()
+    )
+
+    # Update id_group_sky for those that were assigned
+    id_group_sky_array = df_galaxies["id_group_sky"].to_numpy().copy()
+    for i, new_id in enumerate(new_assignments):
+        if new_id != -1:
+            id_group_sky_array[ungrouped_galaxy_indices[i]] = int(new_id)
+
+    df_galaxies = df_galaxies.with_columns(
+        pl.Series("id_group_sky", id_group_sky_array)
+    )
+
+    return df_galaxies
+
+
 def join_groups(
     centers: np.ndarray, rvirs: np.ndarray, ids: np.ndarray
 ) -> dict[str, int]:
@@ -103,7 +203,8 @@ def join_groups(
     counter = 1
     for group in real_groups:
         if len(group) == 1:
-            mapping[group.pop()] = -1
+            mapping[group.pop()] = counter
+            counter += 1
         else:
             for g in group:
                 mapping[g] = counter
@@ -139,9 +240,15 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     print("Converting to cartesian coordinates (vectorized)...")
     centers = skycoord_to_cartesian_vectorized(ras, decs, zcos)
 
+    # PRELIMINARY STEP: Assign ungrouped galaxies to nearby groups
+    print("\n=== Assigning ungrouped galaxies ===")
+    df_galaxies = assign_ungrouped_galaxies(df_galaxies, centers, rvirs, ids)
+    print("=== Ungrouped galaxy assignment complete ===\n")
+
     # Generate mapping: id_group_sky (str) → id_fof (int)
     # No Group objects created at all!
     new_group_mapping = join_groups(centers, rvirs, ids)
+    new_group_mapping["-1"] = -1
 
     # Apply mapping to both dataframes
     print("Applying FoF mapping...")
@@ -152,6 +259,16 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     )
 
     df_galaxies = df_galaxies.with_columns(
+        pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
+    )
+
+   
+
+    df_galaxies = df_galaxies.with_columns(pl.col("id_fof").cast(int))
+    df_groups = df_groups.with_columns(pl.col("id_fof").cast(int))
+
+    # All galaxies that only show up once need to be assigned isolated.
+    df_galaxies = df_galaxies.with_columns(
         pl.when(
             (pl.col("id_fof").count().over("id_fof") == 1) & (pl.col("id_fof") != -1)
         )
@@ -159,6 +276,7 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
         .otherwise(pl.col("id_fof"))
         .alias("id_fof")
     )
+
 
     print("Writing results...")
     df_galaxies.write_parquet(galaxies_file)
