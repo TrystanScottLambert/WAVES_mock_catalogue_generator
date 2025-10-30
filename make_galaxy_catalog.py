@@ -9,6 +9,7 @@ from read import read_lightcone, read_photometry_data_hdf5
 from write import write_to_parquet
 from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
 from table_formats import GalaxyTable, GroupTable
+from group_post_process import add_fof_ids
 
 
 def filter_based_on_mag(
@@ -66,6 +67,10 @@ def main():
         config.cat_details,
         config.group_outfile_name,
     )
+
+    # Post-processing for groups
+    add_fof_ids(config.galaxy_outfile_name, config.group_outfile_name)
+
 
 
 if __name__ == "__main__":
