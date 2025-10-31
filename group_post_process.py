@@ -32,12 +32,18 @@ def calc_rvir_from_mvir(
     return rvir_units.to(u.Mpc).value
 
 
-def skycoord_to_cartesian_vectorized(ra, dec, zcos):
+def skycoord_to_cartesian_vectorized(
+    ra: np.ndarray[float], dec: np.ndarray[float], zcos: np.ndarray[float]
+) -> np.ndarray[np.ndarray[float, float, float]]:
     """
     Vectorized conversion of sky coordinates to cartesian.
     """
-    distance = Planck18.comoving_distance(zcos)
-    c = SkyCoord(ra=ra * u.deg, dec=dec * u.deg, distance=distance)
+    distance = Planck18.comoving_distance(zcos.astype(np.float64))
+    c = SkyCoord(
+        ra=ra.astype(np.float64) * u.deg,
+        dec=dec.astype(np.float64) * u.deg,
+        distance=distance,
+    )
     centers = np.column_stack(
         [c.cartesian.x.value, c.cartesian.y.value, c.cartesian.z.value]
     )
@@ -262,8 +268,6 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
         pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
     )
 
-   
-
     df_galaxies = df_galaxies.with_columns(pl.col("id_fof").cast(int))
     df_groups = df_groups.with_columns(pl.col("id_fof").cast(int))
 
@@ -276,7 +280,6 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
         .otherwise(pl.col("id_fof"))
         .alias("id_fof")
     )
-
 
     print("Writing results...")
     df_galaxies.write_parquet(galaxies_file)
