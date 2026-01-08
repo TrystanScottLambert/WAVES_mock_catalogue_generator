@@ -34,7 +34,7 @@ def calc_rvir_from_mvir(
 
 def skycoord_to_cartesian_vectorized(
     ra: np.ndarray[float], dec: np.ndarray[float], zcos: np.ndarray[float]
-) -> np.ndarray[np.ndarray[float, float, float]]:
+) -> np.ndarray[np.ndarray[float]]:
     """
     Vectorized conversion of sky coordinates to cartesian.
     """
