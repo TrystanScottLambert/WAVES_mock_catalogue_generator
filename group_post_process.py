@@ -218,6 +218,13 @@ def join_groups(
 
     return mapping
 
+def calculate_fof_masses(data_frame: pl.DataFrame) -> pl.DataFrame:
+    """
+    Goes through the new id_fof and adds the masses together of the constituent groups.
+    """
+    all_ids = np.array(data_frame["id_fof"])
+    for id in all_ids:
+
 
 def add_fof_ids(galaxies_file: str, groups_file: str):
     """
@@ -263,6 +270,11 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     df_groups = df_groups.with_columns(
         pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
     )
+    # This will add the combined masses together. This could be improved with a new function that 
+    # takes into account the positions too. Likely this will need to be added next.
+    df_masses = df_groups.group_by("id_fof").agg(pl.col("mvir").sum())
+    df_groups.join(df_masses)
+    df_groups.rename({"mvir_right": "fof_virial_mass"})
 
     df_galaxies = df_galaxies.with_columns(
         pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
