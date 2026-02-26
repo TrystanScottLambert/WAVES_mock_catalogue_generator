@@ -293,6 +293,7 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
         .otherwise(pl.col("id_fof"))
         .alias("id_fof")
     )
+    df_galaxies = df_galaxies.filter(pl.col("mvir") > 1e8)
 
     print("Writing results...")
     df_galaxies.write_parquet(galaxies_file)
