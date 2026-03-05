@@ -274,7 +274,7 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     # This will add the combined masses together. This could be improved with a new function that
     # takes into account the positions too. Likely this will need to be added next. #TODO:
     df_masses = df_groups.group_by("id_fof").agg(pl.col("mvir").sum())
-    df_groups.join(df_masses)
+    df_groups.join(df_masses, on="id_fof")
     df_groups.rename({"mvir_right": "fof_virial_mass"})
 
     df_galaxies = df_galaxies.with_columns(
