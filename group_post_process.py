@@ -275,7 +275,7 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
     # takes into account the positions too. Likely this will need to be added next. #TODO:
     df_masses = df_groups.group_by("id_fof").agg(pl.col("mvir").sum())
     df_groups.join(df_masses, on="id_fof")
-    df_groups.rename({"mvir_right": "fof_virial_mass"})
+    df_groups.rename({"mvir": "fof_virial_mass"})
 
     df_galaxies = df_galaxies.with_columns(
         pl.col("id_group_sky").cast(str).replace(new_group_mapping).alias("id_fof")
@@ -293,7 +293,7 @@ def add_fof_ids(galaxies_file: str, groups_file: str):
         .otherwise(pl.col("id_fof"))
         .alias("id_fof")
     )
-    df_galaxies = df_galaxies.filter(pl.col("mvir") > 1e8)
+    df_galaxies = df_galaxies.filter(pl.col("log_mstar_total") > 8)
 
     print("Writing results...")
     df_galaxies.write_parquet(galaxies_file)
