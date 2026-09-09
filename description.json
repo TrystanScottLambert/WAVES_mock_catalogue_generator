@@ -1,0 +1,1926 @@
+{
+  "galaxy_properties": {
+    "coline_flux_int_1": {
+      "name": "coline_flux_int_1",
+      "description": "Integrated CO(1-0) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_10": {
+      "name": "coline_flux_int_10",
+      "description": "Integrated CO(10-9) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_2": {
+      "name": "coline_flux_int_2",
+      "description": "Integrated CO(2-1) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_3": {
+      "name": "coline_flux_int_3",
+      "description": "Integrated CO(3-2) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_4": {
+      "name": "coline_flux_int_4",
+      "description": "Integrated CO(4-3) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_5": {
+      "name": "coline_flux_int_5",
+      "description": "Integrated CO(5-4) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_6": {
+      "name": "coline_flux_int_6",
+      "description": "Integrated CO(6-5) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_7": {
+      "name": "coline_flux_int_7",
+      "description": "Integrated CO(7-6) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_8": {
+      "name": "coline_flux_int_8",
+      "description": "Integrated CO(8-7) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_9": {
+      "name": "coline_flux_int_9",
+      "description": "Integrated CO(9-8) line flux",
+      "units": "W/m^2"
+    },
+    "coline_flux_int_vel_1": {
+      "name": "coline_flux_int_vel_1",
+      "description": "Velocity-integrated CO(1-0) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_10": {
+      "name": "coline_flux_int_vel_10",
+      "description": "Velocity-integrated CO(10-9) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_2": {
+      "name": "coline_flux_int_vel_2",
+      "description": "Velocity-integrated CO(2-1) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_3": {
+      "name": "coline_flux_int_vel_3",
+      "description": "Velocity-integrated CO(3-2) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_4": {
+      "name": "coline_flux_int_vel_4",
+      "description": "Velocity-integrated CO(4-3) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_5": {
+      "name": "coline_flux_int_vel_5",
+      "description": "Velocity-integrated CO(5-4) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_6": {
+      "name": "coline_flux_int_vel_6",
+      "description": "Velocity-integrated CO(6-5) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_7": {
+      "name": "coline_flux_int_vel_7",
+      "description": "Velocity-integrated CO(7-6) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_8": {
+      "name": "coline_flux_int_vel_8",
+      "description": "Velocity-integrated CO(8-7) line flux",
+      "units": "Jy km/s"
+    },
+    "coline_flux_int_vel_9": {
+      "name": "coline_flux_int_vel_9",
+      "description": "Velocity-integrated CO(9-8) line flux",
+      "units": "Jy km/s"
+    },
+    "hiline_flux_peak": {
+      "name": "hiline_flux_peak",
+      "description": "normalised peak HI line flux density of inclined galaxy (multiply by hiline_flux_int_vel to get Jy values)",
+      "units": "s/km"
+    },
+    "hiline_flux_central": {
+      "name": "hiline_flux_central",
+      "description": "normalised central HI line flux density of inclined galaxy (multiply by hiline_flux_int_vel to get Jy values)",
+      "units": "s/km"
+    },
+    "hiline_width_peak": {
+      "name": "hiline_width_peak",
+      "description": "HI line-width between flux peaks of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "hiline_width_50": {
+      "name": "hiline_width_50",
+      "description": "HI line-width at 50% of the peak flux of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "hiline_width_20": {
+      "name": "hiline_width_20",
+      "description": "HI line-width at 20% of the peak flux of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "hiline_flux_peak_eo": {
+      "name": "hiline_flux_peak_eo",
+      "description": "normalised peak HI line flux density of edge-on galaxy (multiply by hiline_flux_int_vel to get Jy values)",
+      "units": "s/km"
+    },
+    "hiline_flux_central_eo": {
+      "name": "hiline_flux_central_eo",
+      "description": "normalised central HI line flux density of edge-on galaxy (multiply by hiline_flux_int_vel to get Jy values)",
+      "units": "s/km"
+    },
+    "hiline_width_peak_eo": {
+      "name": "hiline_width_peak_eo",
+      "description": "HI line-width between flux peaks of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "hiline_width_50_eo": {
+      "name": "hiline_width_50_eo",
+      "description": "HI line-width at 50% of the peak flux of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "hiline_width_20_eo": {
+      "name": "hiline_width_20_eo",
+      "description": "HI line-width at 20% of the peak flux of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_flux_peak": {
+      "name": "h2line_flux_peak",
+      "description": "normalised peak molecular line flux density of inclined galaxy (multiply by velocity-integrated flux to get Jy)",
+      "units": "s/km"
+    },
+    "h2line_flux_central": {
+      "name": "h2line_flux_central",
+      "description": "normalised central molecular line flux density of inclined galaxy (multiply by velocity-integrated flux to get Jy)",
+      "units": "s/km"
+    },
+    "h2line_width_peak": {
+      "name": "h2line_width_peak",
+      "description": "molecular line-width between flux peaks of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_width_50": {
+      "name": "h2line_width_50",
+      "description": "molecular line-width at 50% of the peak flux of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_width_20": {
+      "name": "h2line_width_20",
+      "description": "molecular line-width at 20% of the peak flux of inclined galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_flux_peak_eo": {
+      "name": "h2line_flux_peak_eo",
+      "description": "normalised peak molecular line flux density of edge-on galaxy (multiply by velocity-integrated flux to get Jy)",
+      "units": "s/km"
+    },
+    "h2line_flux_central_eo": {
+      "name": "h2line_flux_central_eo",
+      "description": "normalised central molecular line flux density of edge-on galaxy (multiply by velocity-integrated flux to get Jy)",
+      "units": "s/km"
+    },
+    "h2line_width_peak_eo": {
+      "name": "h2line_width_peak_eo",
+      "description": "molecular line-width between flux peaks of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_width_50_eo": {
+      "name": "h2line_width_50_eo",
+      "description": "molecular line-width at 50% of the peak flux of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "h2line_width_20_eo": {
+      "name": "h2line_width_20_eo",
+      "description": "molecular line-width at 20% of the peak flux of edge-on galaxy in rest-frame velocity units",
+      "units": "km/s"
+    },
+    "snapshot": {
+      "name": "snapshot",
+      "description": "snapshot index",
+      "units": null
+    },
+    "subvolume": {
+      "name": "subvolume",
+      "description": "subvolume index",
+      "units": null
+    },
+    "tile": {
+      "name": "tile",
+      "description": "tile index in tiling array",
+      "units": null
+    },
+    "zobs": {
+      "name": "zobs",
+      "description": "redshift in observer-frame",
+      "units": null
+    },
+    "zcmb": {
+      "name": "zcmb",
+      "description": "redshift in CMB frame",
+      "units": null
+    },
+    "zcos": {
+      "name": "zcos",
+      "description": "cosmological redshift without peculiar motions",
+      "units": null
+    },
+    "dc": {
+      "name": "dc",
+      "description": "comoving distance",
+      "units": "Mpc/h"
+    },
+    "ra": {
+      "name": "ra",
+      "description": "right ascension",
+      "units": "deg"
+    },
+    "dec": {
+      "name": "dec",
+      "description": "declination",
+      "units": "deg"
+    },
+    "id_galaxy_sky": {
+      "name": "id_galaxy_sky",
+      "description": "unique galaxy ID in mock sky, from 1 to n",
+      "units": null
+    },
+    "id_galaxy_sky_smart": {
+      "name": "id_galaxy_sky_smart",
+      "description": "unique galaxy ID in mock sky, smart format",
+      "units": null
+    },
+    "id_group_sky": {
+      "name": "id_group_sky",
+      "description": "unique group ID if galaxy is in a group, -1 otherwise",
+      "units": null
+    },
+    "id_fof": {
+      "name": "id_fof",
+      "description": "unique group ID if galaxy is in a group specifically for group finding comparisons, -1 if not in group.",
+      "units": null
+    },
+    "id_galaxy_sam": {
+      "name": "id_galaxy_sam",
+      "description": "galaxy ID in SAM",
+      "units": null
+    },
+    "id_halo_sam": {
+      "name": "id_halo_sam",
+      "description": "host halo ID in SAM",
+      "units": null
+    },
+    "type": {
+      "name": "type",
+      "description": "galaxy type (0=central, 1=satellite in halo, 2=orphan)",
+      "units": null
+    },
+    "inclination": {
+      "name": "inclination",
+      "description": "inclination = angle between line-of-sight and spin axis",
+      "units": "deg"
+    },
+    "pa": {
+      "name": "pa",
+      "description": "position angle from north to east",
+      "units": "deg"
+    },
+    "mag": {
+      "name": "mag",
+      "description": "apparent magnitude (generic: M/L ratio of 1, no k-correction)",
+      "units": null
+    },
+    "vpec_x": {
+      "name": "vpec_x",
+      "description": "x-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_y": {
+      "name": "vpec_y",
+      "description": "y-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_z": {
+      "name": "vpec_z",
+      "description": "z-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_r": {
+      "name": "vpec_r",
+      "description": "line-of-sight peculiar velocity",
+      "units": "proper km/s"
+    },
+    "mstars_disk": {
+      "name": "mstars_disk",
+      "description": "stellar mass in the disk",
+      "units": "Msun/h"
+    },
+    "mstars_bulge": {
+      "name": "mstars_bulge",
+      "description": "stellar mass in the bulge",
+      "units": "Msun/h"
+    },
+    "mgas_disk": {
+      "name": "mgas_disk",
+      "description": "gas mass in the disk",
+      "units": "Msun/h"
+    },
+    "mgas_bulge": {
+      "name": "mgas_bulge",
+      "description": "gas mass in the bulge",
+      "units": "Msun/h"
+    },
+    "matom_disk": {
+      "name": "matom_disk",
+      "description": "atomic gas mass in the disk",
+      "units": "Msun/h"
+    },
+    "matom_bulge": {
+      "name": "matom_bulge",
+      "description": "atomic mass in the bulge",
+      "units": "Msun/h"
+    },
+    "mmol_disk": {
+      "name": "mmol_disk",
+      "description": "molecular gas mass in the disk",
+      "units": "Msun/h"
+    },
+    "mmol_bulge": {
+      "name": "mmol_bulge",
+      "description": "molecular gas mass in the bulge",
+      "units": "Msun/h"
+    },
+    "l_x": {
+      "name": "l_x",
+      "description": "x-component of total angular momentum",
+      "units": "Msun pMpc km/s"
+    },
+    "l_y": {
+      "name": "l_y",
+      "description": "y-component of total angular momentum",
+      "units": "Msun pMpc km/s"
+    },
+    "l_z": {
+      "name": "l_z",
+      "description": "z-component of total angular momentum",
+      "units": "Msun pMpc km/s"
+    },
+    "jdisk": {
+      "name": "jdisk",
+      "description": "specific angular momentum of the disk",
+      "units": "cMpc/h km/s"
+    },
+    "jbulge": {
+      "name": "jbulge",
+      "description": "specific angular momentum of the bulge",
+      "units": "cMpc/h km/s"
+    },
+    "mvir_hosthalo": {
+      "name": "mvir_hosthalo",
+      "description": "host halo mass",
+      "units": "Msun/h"
+    },
+    "mvir_subhalo": {
+      "name": "mvir_subhalo",
+      "description": "subhalo mass",
+      "units": "Msun/h"
+    },
+    "zgas_disk": {
+      "name": "zgas_disk",
+      "description": "metallicity of the gas in the disk",
+      "units": null
+    },
+    "zgas_bulge": {
+      "name": "zgas_bulge",
+      "description": "metallicity of the gas in the bulge",
+      "units": null
+    },
+    "sfr_disk": {
+      "name": "sfr_disk",
+      "description": "star formation rate in the disk",
+      "units": "Msun/h/Gyr"
+    },
+    "sfr_burst": {
+      "name": "sfr_burst",
+      "description": "star formation rate in the bulge",
+      "units": "Msun/h/Gyr"
+    },
+    "mbh": {
+      "name": "mbh",
+      "description": "black hole mass",
+      "units": "Msun/h"
+    },
+    "mbh_acc_hh": {
+      "name": "mbh_acc_hh",
+      "description": "black hole accretion rate in the hot halo mode",
+      "units": "Msun/h/Gyr"
+    },
+    "mbh_acc_sb": {
+      "name": "mbh_acc_sb",
+      "description": "black hole accretion rate in the starburst mode",
+      "units": "Msun/h/Gyr"
+    },
+    "vvir_hosthalo": {
+      "name": "vvir_hosthalo",
+      "description": "host halo virial velocity",
+      "units": "km/s"
+    },
+    "vvir_subhalo": {
+      "name": "vvir_subhalo",
+      "description": "subhalo virial velocity",
+      "units": "km/s"
+    },
+    "cnfw_subhalo": {
+      "name": "cnfw_subhalo",
+      "description": "NFW concentration parameter of subhalo",
+      "units": null
+    },
+    "rstar_disk_apparent": {
+      "name": "rstar_disk_apparent",
+      "description": "apparent semi-major axis of half-mass ellipse of stellar disk",
+      "units": "arcsec"
+    },
+    "rstar_bulge_apparent": {
+      "name": "rstar_bulge_apparent",
+      "description": "apparent semi-major axis of half-mass ellipse of stellar bulge",
+      "units": "arcsec"
+    },
+    "rgas_disk_apparent": {
+      "name": "rgas_disk_apparent",
+      "description": "apparent semi-major axis of half-mass ellipse of gas disk",
+      "units": "arcsec"
+    },
+    "rgas_bulge_apparent": {
+      "name": "rgas_bulge_apparent",
+      "description": "apparent semi-major axis of half-mass ellipse of gas bulge",
+      "units": "arcsec"
+    },
+    "rstar_disk_intrinsic": {
+      "name": "rstar_disk_intrinsic",
+      "description": "intrinsic half-mass radius of stellar disk",
+      "units": "cMpc/h"
+    },
+    "rstar_bulge_intrinsic": {
+      "name": "rstar_bulge_intrinsic",
+      "description": "intrinsic half-mass radius of stellar bulge",
+      "units": "cMpc/h"
+    },
+    "rgas_disk_intrinsic": {
+      "name": "rgas_disk_intrinsic",
+      "description": "intrinsic half-mass radius of gas disk",
+      "units": "cMpc/h"
+    },
+    "rgas_bulge_intrinsic": {
+      "name": "rgas_bulge_intrinsic",
+      "description": "intrinsic half-mass radius of gas bulge",
+      "units": "cMpc/h"
+    },
+    "hiline_flux_int": {
+      "name": "hiline_flux_int",
+      "description": "integrated HI line flux",
+      "units": "W/m^2"
+    },
+    "hiline_flux_int_vel": {
+      "name": "hiline_flux_int_vel",
+      "description": "velocity-integrated HI line flux",
+      "units": "Jy km/s"
+    },
+    "log_mstar_total": {
+      "name": "log_mstar_total",
+      "description": "log10 of the total stellar mass (disk + bulge)",
+      "units": "log10(Msun)"
+    },
+    "log_sfr_total": {
+      "name": "log_sfr_total",
+      "description": "log10 of the total star formation rate (disk + burst)",
+      "units": "log10(Msun/yr)"
+    },
+    "re": {
+      "name": "re",
+      "description": "stellar-mass weighted mean of the apparent stellar disk and bulge half-mass semi-major axes",
+      "units": "arcsec"
+    },
+    "bt": {
+      "name": "bt",
+      "description": "bulge-to-total stellar mass ratio",
+      "units": null
+    },
+    "bulge_axis_ratio": {
+      "name": "bulge_axis_ratio",
+      "description": "bulge axis ratio, sampled from a truncated normal distribution (Euclid Collaboration, 2023A&A...671A.102E) because Shark bulges are perfectly spherical",
+      "units": null
+    },
+    "disk_axis_ratio": {
+      "name": "disk_axis_ratio",
+      "description": "projected minor axis of the stellar disk, from the scale height-to-scale length relation of Kregel, van der Kruit & de Grijs (2002) as used in section 2.2 of Lagos+19 (2019MNRAS.489.4196L)",
+      "units": "ckpc"
+    },
+    "bulge_r50": {
+      "name": "bulge_r50",
+      "description": "half-light radius of the stellar bulge, assumed equal to the intrinsic half-mass radius",
+      "units": "cMpc/h"
+    },
+    "disk_r50": {
+      "name": "disk_r50",
+      "description": "half-light radius of the stellar disk, assumed equal to the intrinsic half-mass radius",
+      "units": "cMpc/h"
+    },
+    "total_ap_dust_FUV_GALEX": {
+      "name": "total_ap_dust_FUV_GALEX",
+      "description": "The total apparent magnitude, including dust extinction, in the FUV_GALEX band.",
+      "units": "mag"
+    },
+    "total_ab_dust_FUV_GALEX": {
+      "name": "total_ab_dust_FUV_GALEX",
+      "description": "The total absolute magnitude, including dust extinction, in the FUV_GALEX band.",
+      "units": "mag"
+    },
+    "total_ap_dust_NUV_GALEX": {
+      "name": "total_ap_dust_NUV_GALEX",
+      "description": "The total apparent magnitude, including dust extinction, in the NUV_GALEX band.",
+      "units": "mag"
+    },
+    "total_ab_dust_NUV_GALEX": {
+      "name": "total_ab_dust_NUV_GALEX",
+      "description": "The total absolute magnitude, including dust extinction, in the NUV_GALEX band.",
+      "units": "mag"
+    },
+    "total_ap_dust_u_SDSS": {
+      "name": "total_ap_dust_u_SDSS",
+      "description": "The total apparent magnitude, including dust extinction, in the u_SDSS band.",
+      "units": "mag"
+    },
+    "total_ab_dust_u_SDSS": {
+      "name": "total_ab_dust_u_SDSS",
+      "description": "The total absolute magnitude, including dust extinction, in the u_SDSS band.",
+      "units": "mag"
+    },
+    "total_ap_dust_u_VST": {
+      "name": "total_ap_dust_u_VST",
+      "description": "The total apparent magnitude, including dust extinction, in the u_VST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_u_VST": {
+      "name": "total_ab_dust_u_VST",
+      "description": "The total absolute magnitude, including dust extinction, in the u_VST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_u_LSST": {
+      "name": "total_ap_dust_u_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the u_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_u_LSST": {
+      "name": "total_ab_dust_u_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the u_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_g_SDSS": {
+      "name": "total_ap_dust_g_SDSS",
+      "description": "The total apparent magnitude, including dust extinction, in the g_SDSS band.",
+      "units": "mag"
+    },
+    "total_ab_dust_g_SDSS": {
+      "name": "total_ab_dust_g_SDSS",
+      "description": "The total absolute magnitude, including dust extinction, in the g_SDSS band.",
+      "units": "mag"
+    },
+    "total_ap_dust_g_VST": {
+      "name": "total_ap_dust_g_VST",
+      "description": "The total apparent magnitude, including dust extinction, in the g_VST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_g_VST": {
+      "name": "total_ab_dust_g_VST",
+      "description": "The total absolute magnitude, including dust extinction, in the g_VST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_g_HSC": {
+      "name": "total_ap_dust_g_HSC",
+      "description": "The total apparent magnitude, including dust extinction, in the g_HSC band.",
+      "units": "mag"
+    },
+    "total_ab_dust_g_HSC": {
+      "name": "total_ab_dust_g_HSC",
+      "description": "The total absolute magnitude, including dust extinction, in the g_HSC band.",
+      "units": "mag"
+    },
+    "total_ap_dust_g_LSST": {
+      "name": "total_ap_dust_g_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the g_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_g_LSST": {
+      "name": "total_ab_dust_g_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the g_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_r_SDSS": {
+      "name": "total_ap_dust_r_SDSS",
+      "description": "The total apparent magnitude, including dust extinction, in the r_SDSS band.",
+      "units": "mag"
+    },
+    "total_ab_dust_r_SDSS": {
+      "name": "total_ab_dust_r_SDSS",
+      "description": "The total absolute magnitude, including dust extinction, in the r_SDSS band.",
+      "units": "mag"
+    },
+    "total_ap_dust_r_VST": {
+      "name": "total_ap_dust_r_VST",
+      "description": "The total apparent magnitude, including dust extinction, in the r_VST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_r_VST": {
+      "name": "total_ab_dust_r_VST",
+      "description": "The total absolute magnitude, including dust extinction, in the r_VST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_r_HSC": {
+      "name": "total_ap_dust_r_HSC",
+      "description": "The total apparent magnitude, including dust extinction, in the r_HSC band.",
+      "units": "mag"
+    },
+    "total_ab_dust_r_HSC": {
+      "name": "total_ab_dust_r_HSC",
+      "description": "The total absolute magnitude, including dust extinction, in the r_HSC band.",
+      "units": "mag"
+    },
+    "total_ap_dust_r_LSST": {
+      "name": "total_ap_dust_r_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the r_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_r_LSST": {
+      "name": "total_ab_dust_r_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the r_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_i_SDSS": {
+      "name": "total_ap_dust_i_SDSS",
+      "description": "The total apparent magnitude, including dust extinction, in the i_SDSS band.",
+      "units": "mag"
+    },
+    "total_ab_dust_i_SDSS": {
+      "name": "total_ab_dust_i_SDSS",
+      "description": "The total absolute magnitude, including dust extinction, in the i_SDSS band.",
+      "units": "mag"
+    },
+    "total_ap_dust_i_VST": {
+      "name": "total_ap_dust_i_VST",
+      "description": "The total apparent magnitude, including dust extinction, in the i_VST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_i_VST": {
+      "name": "total_ab_dust_i_VST",
+      "description": "The total absolute magnitude, including dust extinction, in the i_VST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_i_HSC": {
+      "name": "total_ap_dust_i_HSC",
+      "description": "The total apparent magnitude, including dust extinction, in the i_HSC band.",
+      "units": "mag"
+    },
+    "total_ab_dust_i_HSC": {
+      "name": "total_ab_dust_i_HSC",
+      "description": "The total absolute magnitude, including dust extinction, in the i_HSC band.",
+      "units": "mag"
+    },
+    "total_ap_dust_i_LSST": {
+      "name": "total_ap_dust_i_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the i_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_i_LSST": {
+      "name": "total_ab_dust_i_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the i_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_z_SDSS": {
+      "name": "total_ap_dust_z_SDSS",
+      "description": "The total apparent magnitude, including dust extinction, in the z_SDSS band.",
+      "units": "mag"
+    },
+    "total_ab_dust_z_SDSS": {
+      "name": "total_ab_dust_z_SDSS",
+      "description": "The total absolute magnitude, including dust extinction, in the z_SDSS band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Z_VISTA": {
+      "name": "total_ap_dust_Z_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the Z_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Z_VISTA": {
+      "name": "total_ab_dust_Z_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the Z_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Z_UKIRT": {
+      "name": "total_ap_dust_Z_UKIRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Z_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Z_UKIRT": {
+      "name": "total_ab_dust_Z_UKIRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Z_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_z_VST": {
+      "name": "total_ap_dust_z_VST",
+      "description": "The total apparent magnitude, including dust extinction, in the z_VST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_z_VST": {
+      "name": "total_ab_dust_z_VST",
+      "description": "The total absolute magnitude, including dust extinction, in the z_VST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_z_HSC": {
+      "name": "total_ap_dust_z_HSC",
+      "description": "The total apparent magnitude, including dust extinction, in the z_HSC band.",
+      "units": "mag"
+    },
+    "total_ab_dust_z_HSC": {
+      "name": "total_ab_dust_z_HSC",
+      "description": "The total absolute magnitude, including dust extinction, in the z_HSC band.",
+      "units": "mag"
+    },
+    "total_ap_dust_z_LSST": {
+      "name": "total_ap_dust_z_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the z_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_z_LSST": {
+      "name": "total_ab_dust_z_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the z_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Y_VISTA": {
+      "name": "total_ap_dust_Y_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the Y_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Y_VISTA": {
+      "name": "total_ab_dust_Y_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the Y_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Y_UKIRT": {
+      "name": "total_ap_dust_Y_UKIRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Y_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Y_UKIRT": {
+      "name": "total_ab_dust_Y_UKIRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Y_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Y_HSC": {
+      "name": "total_ap_dust_Y_HSC",
+      "description": "The total apparent magnitude, including dust extinction, in the Y_HSC band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Y_HSC": {
+      "name": "total_ab_dust_Y_HSC",
+      "description": "The total absolute magnitude, including dust extinction, in the Y_HSC band.",
+      "units": "mag"
+    },
+    "total_ap_dust_y_LSST": {
+      "name": "total_ap_dust_y_LSST",
+      "description": "The total apparent magnitude, including dust extinction, in the y_LSST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_y_LSST": {
+      "name": "total_ab_dust_y_LSST",
+      "description": "The total absolute magnitude, including dust extinction, in the y_LSST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_J_VISTA": {
+      "name": "total_ap_dust_J_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the J_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_J_VISTA": {
+      "name": "total_ab_dust_J_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the J_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_J_UKIRT": {
+      "name": "total_ap_dust_J_UKIRT",
+      "description": "The total apparent magnitude, including dust extinction, in the J_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_J_UKIRT": {
+      "name": "total_ab_dust_J_UKIRT",
+      "description": "The total absolute magnitude, including dust extinction, in the J_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_H_VISTA": {
+      "name": "total_ap_dust_H_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the H_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_H_VISTA": {
+      "name": "total_ab_dust_H_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the H_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_H_UKIRT": {
+      "name": "total_ap_dust_H_UKIRT",
+      "description": "The total apparent magnitude, including dust extinction, in the H_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_H_UKIRT": {
+      "name": "total_ab_dust_H_UKIRT",
+      "description": "The total absolute magnitude, including dust extinction, in the H_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_K_VISTA": {
+      "name": "total_ap_dust_K_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the K_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_K_VISTA": {
+      "name": "total_ab_dust_K_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the K_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_K_UKIRT": {
+      "name": "total_ap_dust_K_UKIRT",
+      "description": "The total apparent magnitude, including dust extinction, in the K_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_K_UKIRT": {
+      "name": "total_ab_dust_K_UKIRT",
+      "description": "The total absolute magnitude, including dust extinction, in the K_UKIRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Ks_VISTA": {
+      "name": "total_ap_dust_Ks_VISTA",
+      "description": "The total apparent magnitude, including dust extinction, in the Ks_VISTA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Ks_VISTA": {
+      "name": "total_ab_dust_Ks_VISTA",
+      "description": "The total absolute magnitude, including dust extinction, in the Ks_VISTA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_W1_WISE": {
+      "name": "total_ap_dust_W1_WISE",
+      "description": "The total apparent magnitude, including dust extinction, in the W1_WISE band.",
+      "units": "mag"
+    },
+    "total_ab_dust_W1_WISE": {
+      "name": "total_ab_dust_W1_WISE",
+      "description": "The total absolute magnitude, including dust extinction, in the W1_WISE band.",
+      "units": "mag"
+    },
+    "total_ap_dust_W2_WISE": {
+      "name": "total_ap_dust_W2_WISE",
+      "description": "The total apparent magnitude, including dust extinction, in the W2_WISE band.",
+      "units": "mag"
+    },
+    "total_ab_dust_W2_WISE": {
+      "name": "total_ab_dust_W2_WISE",
+      "description": "The total absolute magnitude, including dust extinction, in the W2_WISE band.",
+      "units": "mag"
+    },
+    "total_ap_dust_W3_WISE": {
+      "name": "total_ap_dust_W3_WISE",
+      "description": "The total apparent magnitude, including dust extinction, in the W3_WISE band.",
+      "units": "mag"
+    },
+    "total_ab_dust_W3_WISE": {
+      "name": "total_ab_dust_W3_WISE",
+      "description": "The total absolute magnitude, including dust extinction, in the W3_WISE band.",
+      "units": "mag"
+    },
+    "total_ap_dust_W4_WISE": {
+      "name": "total_ap_dust_W4_WISE",
+      "description": "The total apparent magnitude, including dust extinction, in the W4_WISE band.",
+      "units": "mag"
+    },
+    "total_ab_dust_W4_WISE": {
+      "name": "total_ab_dust_W4_WISE",
+      "description": "The total absolute magnitude, including dust extinction, in the W4_WISE band.",
+      "units": "mag"
+    },
+    "total_ap_dust_I1_Spitzer": {
+      "name": "total_ap_dust_I1_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the I1_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_I1_Spitzer": {
+      "name": "total_ab_dust_I1_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the I1_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_I2_Spitzer": {
+      "name": "total_ap_dust_I2_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the I2_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_I2_Spitzer": {
+      "name": "total_ab_dust_I2_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the I2_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_I3_Spitzer": {
+      "name": "total_ap_dust_I3_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the I3_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_I3_Spitzer": {
+      "name": "total_ab_dust_I3_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the I3_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_I4_Spitzer": {
+      "name": "total_ap_dust_I4_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the I4_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_I4_Spitzer": {
+      "name": "total_ab_dust_I4_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the I4_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_M24_Spitzer": {
+      "name": "total_ap_dust_M24_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the M24_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_M24_Spitzer": {
+      "name": "total_ab_dust_M24_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the M24_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_M70_Spitzer": {
+      "name": "total_ap_dust_M70_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the M70_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_M70_Spitzer": {
+      "name": "total_ab_dust_M70_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the M70_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_M160_Spitzer": {
+      "name": "total_ap_dust_M160_Spitzer",
+      "description": "The total apparent magnitude, including dust extinction, in the M160_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ab_dust_M160_Spitzer": {
+      "name": "total_ab_dust_M160_Spitzer",
+      "description": "The total absolute magnitude, including dust extinction, in the M160_Spitzer band.",
+      "units": "mag"
+    },
+    "total_ap_dust_P70_Herschel": {
+      "name": "total_ap_dust_P70_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the P70_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_P70_Herschel": {
+      "name": "total_ab_dust_P70_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the P70_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_P100_Herschel": {
+      "name": "total_ap_dust_P100_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the P100_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_P100_Herschel": {
+      "name": "total_ab_dust_P100_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the P100_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_P160_Herschel": {
+      "name": "total_ap_dust_P160_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the P160_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_P160_Herschel": {
+      "name": "total_ab_dust_P160_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the P160_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_S250_Herschel": {
+      "name": "total_ap_dust_S250_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the S250_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_S250_Herschel": {
+      "name": "total_ab_dust_S250_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the S250_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_S350_Herschel": {
+      "name": "total_ap_dust_S350_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the S350_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_S350_Herschel": {
+      "name": "total_ab_dust_S350_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the S350_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_S500_Herschel": {
+      "name": "total_ap_dust_S500_Herschel",
+      "description": "The total apparent magnitude, including dust extinction, in the S500_Herschel band.",
+      "units": "mag"
+    },
+    "total_ab_dust_S500_Herschel": {
+      "name": "total_ab_dust_S500_Herschel",
+      "description": "The total absolute magnitude, including dust extinction, in the S500_Herschel band.",
+      "units": "mag"
+    },
+    "total_ap_dust_S450_JCMT": {
+      "name": "total_ap_dust_S450_JCMT",
+      "description": "The total apparent magnitude, including dust extinction, in the S450_JCMT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_S450_JCMT": {
+      "name": "total_ab_dust_S450_JCMT",
+      "description": "The total absolute magnitude, including dust extinction, in the S450_JCMT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_S850_JCMT": {
+      "name": "total_ap_dust_S850_JCMT",
+      "description": "The total apparent magnitude, including dust extinction, in the S850_JCMT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_S850_JCMT": {
+      "name": "total_ab_dust_S850_JCMT",
+      "description": "The total absolute magnitude, including dust extinction, in the S850_JCMT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_1mm_Aztec": {
+      "name": "total_ap_dust_1mm_Aztec",
+      "description": "The total apparent magnitude, including dust extinction, in the 1mm_Aztec band.",
+      "units": "mag"
+    },
+    "total_ab_dust_1mm_Aztec": {
+      "name": "total_ab_dust_1mm_Aztec",
+      "description": "The total absolute magnitude, including dust extinction, in the 1mm_Aztec band.",
+      "units": "mag"
+    },
+    "total_ap_dust_2mm_Gizmo": {
+      "name": "total_ap_dust_2mm_Gizmo",
+      "description": "The total apparent magnitude, including dust extinction, in the 2mm_Gizmo band.",
+      "units": "mag"
+    },
+    "total_ab_dust_2mm_Gizmo": {
+      "name": "total_ab_dust_2mm_Gizmo",
+      "description": "The total absolute magnitude, including dust extinction, in the 2mm_Gizmo band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F070W_JWST": {
+      "name": "total_ap_dust_F070W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F070W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F070W_JWST": {
+      "name": "total_ab_dust_F070W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F070W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F090W_JWST": {
+      "name": "total_ap_dust_F090W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F090W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F090W_JWST": {
+      "name": "total_ab_dust_F090W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F090W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F115W_JWST": {
+      "name": "total_ap_dust_F115W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F115W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F115W_JWST": {
+      "name": "total_ab_dust_F115W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F115W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F140M_JWST": {
+      "name": "total_ap_dust_F140M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F140M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F140M_JWST": {
+      "name": "total_ab_dust_F140M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F140M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F150W_JWST": {
+      "name": "total_ap_dust_F150W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F150W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F150W_JWST": {
+      "name": "total_ab_dust_F150W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F150W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F150W2_JWST": {
+      "name": "total_ap_dust_F150W2_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F150W2_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F150W2_JWST": {
+      "name": "total_ab_dust_F150W2_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F150W2_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F162M_JWST": {
+      "name": "total_ap_dust_F162M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F162M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F162M_JWST": {
+      "name": "total_ab_dust_F162M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F162M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F164N_JWST": {
+      "name": "total_ap_dust_F164N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F164N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F164N_JWST": {
+      "name": "total_ab_dust_F164N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F164N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F182M_JWST": {
+      "name": "total_ap_dust_F182M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F182M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F182M_JWST": {
+      "name": "total_ab_dust_F182M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F182M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F187N_JWST": {
+      "name": "total_ap_dust_F187N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F187N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F187N_JWST": {
+      "name": "total_ab_dust_F187N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F187N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F200W_JWST": {
+      "name": "total_ap_dust_F200W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F200W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F200W_JWST": {
+      "name": "total_ab_dust_F200W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F200W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F210M_JWST": {
+      "name": "total_ap_dust_F210M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F210M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F210M_JWST": {
+      "name": "total_ab_dust_F210M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F210M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F212N_JWST": {
+      "name": "total_ap_dust_F212N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F212N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F212N_JWST": {
+      "name": "total_ab_dust_F212N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F212N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F250M_JWST": {
+      "name": "total_ap_dust_F250M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F250M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F250M_JWST": {
+      "name": "total_ab_dust_F250M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F250M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F277W_JWST": {
+      "name": "total_ap_dust_F277W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F277W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F277W_JWST": {
+      "name": "total_ab_dust_F277W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F277W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F300M_JWST": {
+      "name": "total_ap_dust_F300M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F300M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F300M_JWST": {
+      "name": "total_ab_dust_F300M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F300M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F322W2_JWST": {
+      "name": "total_ap_dust_F322W2_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F322W2_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F322W2_JWST": {
+      "name": "total_ab_dust_F322W2_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F322W2_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F323N_JWST": {
+      "name": "total_ap_dust_F323N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F323N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F323N_JWST": {
+      "name": "total_ab_dust_F323N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F323N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F335M_JWST": {
+      "name": "total_ap_dust_F335M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F335M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F335M_JWST": {
+      "name": "total_ab_dust_F335M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F335M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F356W_JWST": {
+      "name": "total_ap_dust_F356W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F356W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F356W_JWST": {
+      "name": "total_ab_dust_F356W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F356W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F360M_JWST": {
+      "name": "total_ap_dust_F360M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F360M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F360M_JWST": {
+      "name": "total_ab_dust_F360M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F360M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F405N_JWST": {
+      "name": "total_ap_dust_F405N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F405N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F405N_JWST": {
+      "name": "total_ab_dust_F405N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F405N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F410M_JWST": {
+      "name": "total_ap_dust_F410M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F410M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F410M_JWST": {
+      "name": "total_ab_dust_F410M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F410M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F430M_JWST": {
+      "name": "total_ap_dust_F430M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F430M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F430M_JWST": {
+      "name": "total_ab_dust_F430M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F430M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F444W_JWST": {
+      "name": "total_ap_dust_F444W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F444W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F444W_JWST": {
+      "name": "total_ab_dust_F444W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F444W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F460M_JWST": {
+      "name": "total_ap_dust_F460M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F460M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F460M_JWST": {
+      "name": "total_ab_dust_F460M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F460M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F466N_JWST": {
+      "name": "total_ap_dust_F466N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F466N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F466N_JWST": {
+      "name": "total_ab_dust_F466N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F466N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F470N_JWST": {
+      "name": "total_ap_dust_F470N_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F470N_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F470N_JWST": {
+      "name": "total_ab_dust_F470N_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F470N_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F480M_JWST": {
+      "name": "total_ap_dust_F480M_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F480M_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F480M_JWST": {
+      "name": "total_ab_dust_F480M_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F480M_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F560W_JWST": {
+      "name": "total_ap_dust_F560W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F560W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F560W_JWST": {
+      "name": "total_ab_dust_F560W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F560W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F770W_JWST": {
+      "name": "total_ap_dust_F770W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F770W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F770W_JWST": {
+      "name": "total_ab_dust_F770W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F770W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F1000W_JWST": {
+      "name": "total_ap_dust_F1000W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F1000W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F1000W_JWST": {
+      "name": "total_ab_dust_F1000W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F1000W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F1130W_JWST": {
+      "name": "total_ap_dust_F1130W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F1130W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F1130W_JWST": {
+      "name": "total_ab_dust_F1130W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F1130W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F1280W_JWST": {
+      "name": "total_ap_dust_F1280W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F1280W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F1280W_JWST": {
+      "name": "total_ab_dust_F1280W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F1280W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F1500W_JWST": {
+      "name": "total_ap_dust_F1500W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F1500W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F1500W_JWST": {
+      "name": "total_ab_dust_F1500W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F1500W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F1800W_JWST": {
+      "name": "total_ap_dust_F1800W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F1800W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F1800W_JWST": {
+      "name": "total_ab_dust_F1800W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F1800W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F2100W_JWST": {
+      "name": "total_ap_dust_F2100W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F2100W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F2100W_JWST": {
+      "name": "total_ab_dust_F2100W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F2100W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F2550W_JWST": {
+      "name": "total_ap_dust_F2550W_JWST",
+      "description": "The total apparent magnitude, including dust extinction, in the F2550W_JWST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F2550W_JWST": {
+      "name": "total_ab_dust_F2550W_JWST",
+      "description": "The total absolute magnitude, including dust extinction, in the F2550W_JWST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Blue_Euclid": {
+      "name": "total_ap_dust_Blue_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the Blue_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Blue_Euclid": {
+      "name": "total_ab_dust_Blue_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the Blue_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_H_Euclid": {
+      "name": "total_ap_dust_H_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the H_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_H_Euclid": {
+      "name": "total_ab_dust_H_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the H_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_J_Euclid": {
+      "name": "total_ap_dust_J_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the J_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_J_Euclid": {
+      "name": "total_ab_dust_J_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the J_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Red_Euclid": {
+      "name": "total_ap_dust_Red_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the Red_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Red_Euclid": {
+      "name": "total_ab_dust_Red_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the Red_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_VIS_Euclid": {
+      "name": "total_ap_dust_VIS_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the VIS_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_VIS_Euclid": {
+      "name": "total_ab_dust_VIS_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the VIS_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Y_Euclid": {
+      "name": "total_ap_dust_Y_Euclid",
+      "description": "The total apparent magnitude, including dust extinction, in the Y_Euclid band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Y_Euclid": {
+      "name": "total_ab_dust_Y_Euclid",
+      "description": "The total absolute magnitude, including dust extinction, in the Y_Euclid band.",
+      "units": "mag"
+    },
+    "total_ap_dust_F184_WFIRST": {
+      "name": "total_ap_dust_F184_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the F184_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_F184_WFIRST": {
+      "name": "total_ab_dust_F184_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the F184_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_H158_WFIRST": {
+      "name": "total_ap_dust_H158_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the H158_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_H158_WFIRST": {
+      "name": "total_ab_dust_H158_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the H158_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_J129_WFIRST": {
+      "name": "total_ap_dust_J129_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the J129_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_J129_WFIRST": {
+      "name": "total_ab_dust_J129_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the J129_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_R062_WFIRST": {
+      "name": "total_ap_dust_R062_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the R062_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_R062_WFIRST": {
+      "name": "total_ab_dust_R062_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the R062_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_W146_WFIRST": {
+      "name": "total_ap_dust_W146_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the W146_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_W146_WFIRST": {
+      "name": "total_ab_dust_W146_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the W146_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Y106_WFIRST": {
+      "name": "total_ap_dust_Y106_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the Y106_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Y106_WFIRST": {
+      "name": "total_ab_dust_Y106_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the Y106_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Z087_WFIRST": {
+      "name": "total_ap_dust_Z087_WFIRST",
+      "description": "The total apparent magnitude, including dust extinction, in the Z087_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Z087_WFIRST": {
+      "name": "total_ab_dust_Z087_WFIRST",
+      "description": "The total absolute magnitude, including dust extinction, in the Z087_WFIRST band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band9_ALMA": {
+      "name": "total_ap_dust_Band9_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band9_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band9_ALMA": {
+      "name": "total_ab_dust_Band9_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band9_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band8_ALMA": {
+      "name": "total_ap_dust_Band8_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band8_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band8_ALMA": {
+      "name": "total_ab_dust_Band8_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band8_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band7_ALMA": {
+      "name": "total_ap_dust_Band7_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band7_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band7_ALMA": {
+      "name": "total_ab_dust_Band7_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band7_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band6_ALMA": {
+      "name": "total_ap_dust_Band6_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band6_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band6_ALMA": {
+      "name": "total_ab_dust_Band6_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band6_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band5_ALMA": {
+      "name": "total_ap_dust_Band5_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band5_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band5_ALMA": {
+      "name": "total_ab_dust_Band5_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band5_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band4_ALMA": {
+      "name": "total_ap_dust_Band4_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band4_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band4_ALMA": {
+      "name": "total_ab_dust_Band4_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band4_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band3_ALMA": {
+      "name": "total_ap_dust_Band3_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band3_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band3_ALMA": {
+      "name": "total_ab_dust_Band3_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band3_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band2_ALMA": {
+      "name": "total_ap_dust_Band2_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band2_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band2_ALMA": {
+      "name": "total_ab_dust_Band2_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band2_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band1_ALMA": {
+      "name": "total_ap_dust_Band1_ALMA",
+      "description": "The total apparent magnitude, including dust extinction, in the Band1_ALMA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band1_ALMA": {
+      "name": "total_ab_dust_Band1_ALMA",
+      "description": "The total absolute magnitude, including dust extinction, in the Band1_ALMA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandQ_VLA": {
+      "name": "total_ap_dust_BandQ_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandQ_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandQ_VLA": {
+      "name": "total_ab_dust_BandQ_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandQ_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandKa_VLA": {
+      "name": "total_ap_dust_BandKa_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandKa_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandKa_VLA": {
+      "name": "total_ab_dust_BandKa_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandKa_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandK_VLA": {
+      "name": "total_ap_dust_BandK_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandK_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandK_VLA": {
+      "name": "total_ab_dust_BandK_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandK_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandKu_VLA": {
+      "name": "total_ap_dust_BandKu_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandKu_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandKu_VLA": {
+      "name": "total_ab_dust_BandKu_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandKu_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandX_VLA": {
+      "name": "total_ap_dust_BandX_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandX_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandX_VLA": {
+      "name": "total_ab_dust_BandX_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandX_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandC_VLA": {
+      "name": "total_ap_dust_BandC_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandC_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandC_VLA": {
+      "name": "total_ab_dust_BandC_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandC_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandS_VLA": {
+      "name": "total_ap_dust_BandS_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandS_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandS_VLA": {
+      "name": "total_ab_dust_BandS_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandS_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandL_VLA": {
+      "name": "total_ap_dust_BandL_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandL_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandL_VLA": {
+      "name": "total_ab_dust_BandL_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandL_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_BandP_VLA": {
+      "name": "total_ap_dust_BandP_VLA",
+      "description": "The total apparent magnitude, including dust extinction, in the BandP_VLA band.",
+      "units": "mag"
+    },
+    "total_ab_dust_BandP_VLA": {
+      "name": "total_ab_dust_BandP_VLA",
+      "description": "The total absolute magnitude, including dust extinction, in the BandP_VLA band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band5_GMRT": {
+      "name": "total_ap_dust_Band5_GMRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Band5_GMRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band5_GMRT": {
+      "name": "total_ab_dust_Band5_GMRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Band5_GMRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band4_GMRT": {
+      "name": "total_ap_dust_Band4_GMRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Band4_GMRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band4_GMRT": {
+      "name": "total_ab_dust_Band4_GMRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Band4_GMRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band3_GMRT": {
+      "name": "total_ap_dust_Band3_GMRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Band3_GMRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band3_GMRT": {
+      "name": "total_ab_dust_Band3_GMRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Band3_GMRT band.",
+      "units": "mag"
+    },
+    "total_ap_dust_Band2_GMRT": {
+      "name": "total_ap_dust_Band2_GMRT",
+      "description": "The total apparent magnitude, including dust extinction, in the Band2_GMRT band.",
+      "units": "mag"
+    },
+    "total_ab_dust_Band2_GMRT": {
+      "name": "total_ab_dust_Band2_GMRT",
+      "description": "The total absolute magnitude, including dust extinction, in the Band2_GMRT band.",
+      "units": "mag"
+    }
+  },
+  "group_properties": {
+    "snapshot": {
+      "name": "snapshot",
+      "description": "snapshot index",
+      "units": null
+    },
+    "subvolume": {
+      "name": "subvolume",
+      "description": "subvolume index",
+      "units": null
+    },
+    "tile": {
+      "name": "tile",
+      "description": "tile index in tiling array",
+      "units": null
+    },
+    "zobs": {
+      "name": "zobs",
+      "description": "redshift in observer-frame",
+      "units": null
+    },
+    "zcmb": {
+      "name": "zcmb",
+      "description": "redshift in CMB frame",
+      "units": null
+    },
+    "zcos": {
+      "name": "zcos",
+      "description": "cosmological redshift without peculiar motions",
+      "units": null
+    },
+    "dc": {
+      "name": "dc",
+      "description": "comoving distance",
+      "units": "Mpc/h"
+    },
+    "ra": {
+      "name": "ra",
+      "description": "right ascension",
+      "units": "deg"
+    },
+    "dec": {
+      "name": "dec",
+      "description": "declination",
+      "units": "deg"
+    },
+    "vpec_x": {
+      "name": "vpec_x",
+      "description": "x-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_y": {
+      "name": "vpec_y",
+      "description": "y-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_z": {
+      "name": "vpec_z",
+      "description": "z-component of peculiar velocity",
+      "units": "proper km/s"
+    },
+    "vpec_r": {
+      "name": "vpec_r",
+      "description": "line-of-sight peculiar velocity",
+      "units": "proper km/s"
+    },
+    "sigma_3d_all": {
+      "name": "sigma_3d_all",
+      "description": "3D peculiar velocity dispersion of ALL group members, including non-detections",
+      "units": "proper km/s"
+    },
+    "sigma_los_detected": {
+      "name": "sigma_los_detected",
+      "description": "line-of-sight peculiar velocity dispersion of detected group members",
+      "units": "proper km/s"
+    },
+    "id_group_sky": {
+      "name": "id_group_sky",
+      "description": "unique parent halo ID in mock sky",
+      "units": null
+    },
+    "id_halo_sam": {
+      "name": "id_halo_sam",
+      "description": "parent halo ID in SAM",
+      "units": null
+    },
+    "id_fof": {
+      "name": "id_fof",
+      "description": "unique group ID if galaxy is in a group specifically for group finding comparisons, -1 if not in group.",
+      "units": null
+    },
+    "mvir": {
+      "name": "mvir",
+      "description": "virial mass",
+      "units": "Msun/h"
+    },
+    "n_galaxies_total": {
+      "name": "n_galaxies_total",
+      "description": "total number of galaxies that live in the same group (host halo)",
+      "units": null
+    },
+    "n_galaxies_selected": {
+      "name": "n_galaxies_selected",
+      "description": "number of galaxies that live in the same group (host halo) and are present in the mock sky",
+      "units": null
+    },
+    "flag": {
+      "name": "flag",
+      "description": "group flag: 0 if group complete, >0 if truncated by survey edge (+1), snapshot limit (+2), tile edge (+4), shell edge (+8)",
+      "units": null
+    }
+  }
+}
