@@ -2,15 +2,16 @@
 Creating a mock catalogue from the SHARK runs on pawsey.
 """
 
+import h5py
 import numpy as np
 
-from load import load_all, Config
-from read import read_lightcone, read_photometry_data_hdf5
-from write import write_to_parquet
-from read import _read_json_properties
-from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
-from table_formats import GalaxyTable, GroupTable
 from group_post_process import add_fof_ids
+from load import Config, load_all
+
+from property_dictionaries import GALAXY_PROPERTIES, GROUP_PROPERTIES
+from read import read_lightcone, read_photometry_data_hdf5
+from table_formats import GalaxyTable, GroupTable
+from write import write_to_parquet
 
 
 def filter_based_on_mag(
@@ -52,10 +53,19 @@ def main():
     # Writing
     galaxy_write_fields = config.gal_props_write
     group_write_fields = config.group_props_write
-    if len(galaxy_write_fields) == 0:
-        galaxy_write_fields = _read_json_properties("gal")
+
+    test_sub_volume = config.dirs.sub_volumes[0]
+    full_name = config.print_full_file_name("mock", test_sub_volume, mock_or_sed="mock")
+
     if len(group_write_fields) == 0:
-        group_write_fields = _read_json_properties("group")
+        print("writing all read properties for groups. No selection found in config")
+        with h5py.File(full_name, "r") as f:
+            group_write_fields = list(f["groups"].keys())
+
+    if len(galaxy_write_fields) == 0:
+        print("writing all read properties for galaxies. No selection found in config")
+        with h5py.File(full_name, "r") as f:
+            galaxy_write_fields = list(f["galaxies"].keys())
 
     galaxy_header, galaxy_data_to_write = galaxy_data.sample(
         list_of_columns=galaxy_write_fields

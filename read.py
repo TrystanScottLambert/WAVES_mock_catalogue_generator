@@ -5,14 +5,11 @@ General functions used for building the WAVES mock catalogue.
 from collections import defaultdict
 import warnings
 import glob
-import json
 
 import h5py
 import numpy as np
 
 from load import Config
-
-DESCRIPTION_JSON = "description.json"
 
 
 def read_spectra(
@@ -70,22 +67,6 @@ def read_all_spectra(
     return spectra_table
 
 
-def _read_json_properties(source_type: str) -> list[str]:
-    """
-    Helper function to read in all the properties stored in the description.json file.
-    """
-    # TODO: There is a proerties.py that we should use instaead here
-    with open(DESCRIPTION_JSON, "r") as file:
-        data = json.load(file)
-    if source_type == "gal":
-        fields = list(data["galaxy_properties"].keys())
-    elif source_type == "group":
-        fields = list(data["group_properties"].keys())
-    else:
-        raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
-    return fields
-
-
 def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     """
     Reads in the mock data using the group/gal to read values in the config file.
@@ -97,18 +78,22 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
 
     if source_type == "gal":
         fields = config.gal_props_read
-        if len(fields) == 0:
-            fields = _read_json_properties(source_type)
+        source_type = "galaxies"  # This is the name that is used in hdf5
     elif source_type == "group":
         fields = config.group_props_read
-        if len(fields) == 0:
-            fields = _read_json_properties(source_type)
+        source_type = "groups"
     else:
         raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
 
     data = defaultdict(list)
     for sub_volume in config.dirs.sub_volumes:
         full_name = config.print_full_file_name("mock", sub_volume, mock_or_sed="mock")
+
+        if len(fields) == 0:
+            print("Reading all properties. No selection found in config")
+            with h5py.File(full_name, "r") as f:
+                fields = {source_type: list(f[source_type].keys())}
+
         print(f"Reading data from: {full_name}")
         with h5py.File(full_name, "r") as f:
             for group_name, data_names in fields.items():
