@@ -5,11 +5,14 @@ General functions used for building the WAVES mock catalogue.
 from collections import defaultdict
 import warnings
 import glob
+import json
 
 import h5py
 import numpy as np
 
 from load import Config
+
+DESCRIPTION_JSON = "description.json"
 
 
 def read_spectra(
@@ -67,6 +70,21 @@ def read_all_spectra(
     return spectra_table
 
 
+def _read_json_properties(source_type: str) -> list[str]:
+    """
+    Helper function to read in all the properties stored in the description.json file.
+    """
+    with open(DESCRIPTION_JSON, "r") as file:
+        data = json.load(file)
+    if source_type == "gal":
+        fields = list(data["galaxy_properties"].keys())
+    elif source_type == "group":
+        fields = list(data["group_properties"].keys())
+    else:
+        raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
+    return fields
+
+
 def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     """
     Reads in the mock data using the group/gal to read values in the config file.
@@ -78,8 +96,12 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
 
     if source_type == "gal":
         fields = config.gal_props_read
+        if len(fields) == 0:
+            fields = _read_json_properties(source_type)
     elif source_type == "group":
         fields = config.group_props_read
+        if len(fields) == 0:
+            fields = _read_json_properties(source_type)
     else:
         raise ValueError(f'Type must be either "group" or "gal", not "{source_type}"')
 
