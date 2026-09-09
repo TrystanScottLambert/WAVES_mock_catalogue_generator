@@ -74,6 +74,7 @@ def _read_json_properties(source_type: str) -> list[str]:
     """
     Helper function to read in all the properties stored in the description.json file.
     """
+    # TODO: There is a proerties.py that we should use instaead here
     with open(DESCRIPTION_JSON, "r") as file:
         data = json.load(file)
     if source_type == "gal":
