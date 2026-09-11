@@ -89,7 +89,7 @@ def read_lightcone(config: Config, source_type: str) -> dict[np.ndarray]:
     for sub_volume in config.dirs.sub_volumes:
         full_name = config.print_full_file_name("mock", sub_volume, mock_or_sed="mock")
 
-        if len(fields) == 0:
+        if len(fields[source_type]) == 0:
             print("Reading all properties. No selection found in config")
             with h5py.File(full_name, "r") as f:
                 fields = {source_type: list(f[source_type].keys())}
